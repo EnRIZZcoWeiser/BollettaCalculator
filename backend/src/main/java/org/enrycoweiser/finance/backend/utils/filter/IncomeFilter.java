@@ -2,7 +2,6 @@ package org.enrycoweiser.finance.backend.utils.filter;
 
 import org.enrycoweiser.finance.shared.api.request.IncomeRequest;
 import org.enrycoweiser.finance.shared.utils.FilterUtils;
-
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;

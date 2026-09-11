@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.enrycoweiser.finance.backend.standard.StandardEntity;
 import org.enrycoweiser.finance.shared.dto.ExpenseDto;
-import org.enrycoweiser.finance.shared.dto.PaymentMethodDto;
 
 import java.math.BigDecimal;
 import java.util.Date;

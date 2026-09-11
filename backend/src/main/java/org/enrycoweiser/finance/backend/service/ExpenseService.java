@@ -36,7 +36,7 @@ public class ExpenseService implements EntityService<ExpenseRequest, ExpenseResp
             e = expense.get();
         } else {
             e = new Expense();
-            e.setDate(new Date());
+            e.setDate(request.getDate());
         }
 
         try {
@@ -89,7 +89,7 @@ public class ExpenseService implements EntityService<ExpenseRequest, ExpenseResp
             List<Expense> expenses = expenseRepository.retrieveByFilters(filters);
 
             List<ExpenseDto> dtos = new ArrayList<>();
-            for(Expense e : expenses) {
+            for (Expense e : expenses) {
                 ExpenseDto dto = e.toDto();
                 dtos.add(dto);
             }

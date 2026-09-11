@@ -15,5 +15,5 @@ public class IncomeDto extends StandardDto {
     protected String category;
     protected PaymentMethodDto paymentMethodDto;
     protected String note;
-    protected String userId;
+    protected Long userId;
 }
