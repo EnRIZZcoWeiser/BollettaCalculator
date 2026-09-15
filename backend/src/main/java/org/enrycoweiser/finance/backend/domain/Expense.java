@@ -1,5 +1,6 @@
 package org.enrycoweiser.finance.backend.domain;
 
+import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
 import org.enrycoweiser.finance.backend.standard.StandardEntity;
@@ -10,6 +11,7 @@ import java.util.Date;
 
 @Getter
 @Setter
+@Entity
 public class Expense extends StandardEntity {
     protected Date date;
     protected BigDecimal money;

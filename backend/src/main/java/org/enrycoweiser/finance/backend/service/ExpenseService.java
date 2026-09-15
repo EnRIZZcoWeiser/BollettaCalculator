@@ -1,5 +1,6 @@
 package org.enrycoweiser.finance.backend.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.enrycoweiser.finance.backend.domain.Expense;
 import org.enrycoweiser.finance.backend.domain.PaymentMethod;
@@ -16,10 +17,13 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class ExpenseService implements EntityService<ExpenseRequest, ExpenseResponse> {
+public class ExpenseService implements EntityService<ExpenseDto,
+                                                        ExpenseRequest,
+                                                        ExpenseResponse> {
 
     private final ExpenseRepository expenseRepository;
 
+    @Transactional
     @Override
     public ExpenseResponse save(ExpenseRequest request) {
         Expense e;
@@ -59,6 +63,7 @@ public class ExpenseService implements EntityService<ExpenseRequest, ExpenseResp
         return expenseResponse;
     }
 
+    @Transactional
     @Override
     public ExpenseResponse delete(ExpenseRequest request) {
         ExpenseResponse expenseResponse = new ExpenseResponse();
@@ -88,6 +93,7 @@ public class ExpenseService implements EntityService<ExpenseRequest, ExpenseResp
         return expenseResponse;
     }
 
+    @Transactional
     @Override
     public ExpenseResponse retrieve(ExpenseRequest request) {
         ExpenseResponse expenseResponse = new ExpenseResponse();

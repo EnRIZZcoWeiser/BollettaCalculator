@@ -1,16 +1,17 @@
 package org.enrycoweiser.finance.backend.standard;
 
 import jakarta.transaction.Transactional;
+import org.enrycoweiser.finance.shared.standard.StandardDto;
 import org.enrycoweiser.finance.shared.standard.StandardRequest;
 import org.enrycoweiser.finance.shared.standard.StandardResponse;
+import org.springframework.stereotype.Service;
 
-public interface EntityService<REQ extends StandardRequest, RES extends StandardResponse> {
-    @Transactional
+public interface EntityService<DTO extends StandardDto,
+                                REQ extends StandardRequest,
+                                RES extends StandardResponse<DTO>> {
     public abstract RES save(REQ request);
 
-    @Transactional
     public abstract RES delete(REQ request);
 
-    @Transactional
     public abstract RES retrieve(REQ request);
 }

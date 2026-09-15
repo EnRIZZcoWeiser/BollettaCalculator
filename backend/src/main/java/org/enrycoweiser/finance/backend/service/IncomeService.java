@@ -19,7 +19,9 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class IncomeService implements EntityService<IncomeRequest, IncomeResponse> {
+public class IncomeService implements EntityService<IncomeDto,
+                                                    IncomeRequest,
+                                                    IncomeResponse> {
 
     private final IncomeRepository incomeRepository;
 
