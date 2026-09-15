@@ -2,6 +2,7 @@ package org.enrycoweiser.finance.backend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.enrycoweiser.finance.backend.domain.Expense;
+import org.enrycoweiser.finance.backend.domain.PaymentMethod;
 import org.enrycoweiser.finance.backend.repository.ExpenseRepository;
 import org.enrycoweiser.finance.backend.standard.EntityService;
 import org.enrycoweiser.finance.backend.utils.ErrorUtils;
@@ -37,6 +38,13 @@ public class ExpenseService implements EntityService<ExpenseRequest, ExpenseResp
         } else {
             e = new Expense();
             e.setDate(request.getDate());
+            e.setMoney(request.getMoney());
+            e.setLocation(request.getLocation());
+            e.setStore(request.getStore());
+            e.setCategory(request.getCategory());
+            e.setPaymentMethod(new PaymentMethod(request.getPaymentMethod()));
+            e.setNote(request.getNote());
+            e.setUserId(request.getUserId());
         }
 
         try {

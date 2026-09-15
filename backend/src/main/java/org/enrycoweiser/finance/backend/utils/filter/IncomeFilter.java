@@ -14,8 +14,12 @@ public class IncomeFilter {
             return filterMap;
         }
 
-        if(request.getDate() != null) {
-            filterMap.put(FilterUtils.INCOME_DATE, request.getDate());
+        if(request.getDateFrom() != null) {
+            filterMap.put(FilterUtils.INCOME_DATE_FROM, request.getDateFrom());
+        }
+
+        if(request.getDateTo() != null) {
+            filterMap.put(FilterUtils.INCOME_DATE_TO, request.getDateFrom());
         }
 
         if(request.getMoney() != null && request.getMoney().compareTo(BigDecimal.ZERO) > 0) {

@@ -10,7 +10,8 @@ public class FilterUtils {
     public static final String EXPENSE_PAYMENT_METHOD = "PAYMENT_METHOD";
 
     /* INCOME */
-    public static final String INCOME_DATE = "DATE";
+    public static final String INCOME_DATE_FROM = "DATE_FROM";
+    public static final String INCOME_DATE_TO = "DATE_TO";
     public static final String INCOME_MONEY = "MONEY";
     public static final String INCOME_CATEGORY = "CATEGORY";
     public static final String INCOME_PAYMENT_METHOD = "PAYMENT_METHOD";

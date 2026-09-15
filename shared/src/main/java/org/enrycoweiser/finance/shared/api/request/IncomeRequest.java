@@ -12,9 +12,11 @@ import java.util.Date;
 @Setter
 public class IncomeRequest extends StandardRequest {
     protected Date date;
+    protected Date dateFrom;
+    protected Date dateTo;
     protected BigDecimal money;
     protected String category;
     protected PaymentMethodDto paymentMethod;
     protected String note;
-    protected String userId;
+    protected Long userId;
 }

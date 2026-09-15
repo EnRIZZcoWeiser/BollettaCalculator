@@ -2,6 +2,7 @@ package org.enrycoweiser.finance.backend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.enrycoweiser.finance.backend.domain.Income;
+import org.enrycoweiser.finance.backend.domain.PaymentMethod;
 import org.enrycoweiser.finance.backend.repository.IncomeRepository;
 import org.enrycoweiser.finance.backend.standard.EntityService;
 import org.enrycoweiser.finance.backend.utils.ErrorUtils;
@@ -29,7 +30,7 @@ public class IncomeService implements EntityService<IncomeRequest, IncomeRespons
         Optional<Income> income;
 
         try {
-            income = incomeRepository.findById(request.getId());
+            income = incomeRepository.retrieveById(request.getId());
         } catch (Exception ex) {
             incomeResponse.createErrorResponse("", ex.getMessage());
             return incomeResponse;
@@ -40,6 +41,11 @@ public class IncomeService implements EntityService<IncomeRequest, IncomeRespons
         } else {
             i = new Income();
             i.setDate(request.getDate());
+            i.setMoney(request.getMoney());
+            i.setCategory(request.getCategory());
+            i.setPaymentMethod(new PaymentMethod(request.getPaymentMethod()));
+            i.setNote(request.getNote());
+            i.setUserId(request.getUserId());
         }
 
         try {
