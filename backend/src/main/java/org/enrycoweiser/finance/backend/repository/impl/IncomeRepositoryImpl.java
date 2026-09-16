@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import org.enrycoweiser.finance.backend.domain.Income;
+import org.enrycoweiser.finance.backend.repository.ext.IncomeRepositoryExt;
 import org.enrycoweiser.finance.shared.dto.PaymentMethodDto;
 import org.enrycoweiser.finance.shared.utils.FilterUtils;
 import org.springframework.stereotype.Repository;

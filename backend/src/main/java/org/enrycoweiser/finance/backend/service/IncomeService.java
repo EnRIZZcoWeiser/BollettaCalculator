@@ -1,5 +1,6 @@
 package org.enrycoweiser.finance.backend.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.enrycoweiser.finance.backend.domain.Income;
 import org.enrycoweiser.finance.backend.domain.PaymentMethod;
@@ -11,7 +12,6 @@ import org.enrycoweiser.finance.shared.api.request.IncomeRequest;
 import org.enrycoweiser.finance.shared.api.response.IncomeResponse;
 import org.enrycoweiser.finance.shared.dto.IncomeDto;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +25,7 @@ public class IncomeService implements EntityService<IncomeDto,
 
     private final IncomeRepository incomeRepository;
 
+    @Transactional
     @Override
     public IncomeResponse save(IncomeRequest request) {
         Income i;
@@ -34,7 +35,7 @@ public class IncomeService implements EntityService<IncomeDto,
         try {
             income = incomeRepository.retrieveById(request.getId());
         } catch (Exception ex) {
-            incomeResponse.createErrorResponse("", ex.getMessage());
+            incomeResponse.createErrorResponse(ErrorUtils.ERR_001_CODE, ex.getMessage());
             return incomeResponse;
         }
 
@@ -62,6 +63,7 @@ public class IncomeService implements EntityService<IncomeDto,
         return incomeResponse;
     }
 
+    @Transactional
     @Override
     public IncomeResponse delete(IncomeRequest request) {
         IncomeResponse incomeResponse = new IncomeResponse();
@@ -70,7 +72,19 @@ public class IncomeService implements EntityService<IncomeDto,
         try {
             income = incomeRepository.retrieveById(request.getId());
         } catch (Exception ex) {
-            incomeResponse.createErrorResponse("", ex.getMessage());
+            incomeResponse.createErrorResponse(ErrorUtils.ERR_001_CODE, ex.getMessage());
+            return incomeResponse;
+        }
+
+        if(income.isPresent()) {
+            try {
+                incomeRepository.delete(income.get());
+            } catch (Exception ex) {
+                incomeResponse.createErrorResponse(ErrorUtils.API_002, ErrorUtils.API_002_CODE);
+                return incomeResponse;
+            }
+        } else {
+            incomeResponse.createErrorResponse(ErrorUtils.API_003, ErrorUtils.API_003_CODE);
             return incomeResponse;
         }
 
@@ -79,6 +93,7 @@ public class IncomeService implements EntityService<IncomeDto,
         return incomeResponse;
     }
 
+    @Transactional
     @Override
     public IncomeResponse retrieve(IncomeRequest request) {
         IncomeResponse incomeResponse = new IncomeResponse();

@@ -22,12 +22,9 @@ public class PaymentMethod extends StandardEntity {
         return dto;
     }
 
-    /*public PaymentMethod() {
-        id = null;
-        name = null;
-        active = null;
-        userId = null;
-    }*/
+    public PaymentMethod() {
+
+    }
 
     public PaymentMethod(PaymentMethodDto dto) {
         this.id = dto.getId();

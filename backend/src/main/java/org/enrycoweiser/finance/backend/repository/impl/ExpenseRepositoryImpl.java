@@ -1,8 +1,9 @@
-package org.enrycoweiser.finance.backend.repository.ext;
+package org.enrycoweiser.finance.backend.repository.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.enrycoweiser.finance.backend.domain.Expense;
+import org.enrycoweiser.finance.backend.repository.ext.ExpenseRepositoryExt;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

@@ -33,7 +33,7 @@ public class ExpenseService implements EntityService<ExpenseDto,
         try {
             expense = expenseRepository.retrieveById(request.getId());
         } catch (Exception ex) {
-            expenseResponse.createErrorResponse("", ex.getMessage());
+            expenseResponse.createErrorResponse(ErrorUtils.ERR_001_CODE, ex.getMessage());
             return expenseResponse;
         }
 
@@ -72,7 +72,7 @@ public class ExpenseService implements EntityService<ExpenseDto,
         try {
             expense = expenseRepository.retrieveById(request.getId());
         } catch (Exception ex) {
-            expenseResponse.createErrorResponse("", ex.getMessage());
+            expenseResponse.createErrorResponse(ErrorUtils.ERR_001_CODE, ex.getMessage());
             return expenseResponse;
         }
 
