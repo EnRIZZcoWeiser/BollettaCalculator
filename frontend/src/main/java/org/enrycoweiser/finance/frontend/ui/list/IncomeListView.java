@@ -3,23 +3,23 @@ package org.enrycoweiser.finance.frontend.ui.list;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.enrycoweiser.finance.frontend.base.StandardListView;
-import org.enrycoweiser.finance.frontend.ui.dialog.alter.ExpenseAlterDlg;
-import org.enrycoweiser.finance.frontend.ui.dialog.filter.ExpenseFilterDlg;
-import org.enrycoweiser.finance.shared.dto.ExpenseDto;
+import org.enrycoweiser.finance.frontend.ui.dialog.alter.IncomeAlterDlg;
+import org.enrycoweiser.finance.frontend.ui.dialog.filter.IncomeFilterDlg;
+import org.enrycoweiser.finance.shared.dto.IncomeDto;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Route("/expense")
-@PageTitle("Expense")
-public class ExpenseListView extends StandardListView<ExpenseDto,
-                                                        ExpenseAlterDlg,
-                                                        ExpenseFilterDlg> {
+@Route("/income")
+@PageTitle("Income")
+public class IncomeListView extends StandardListView<IncomeDto,
+                                                        IncomeAlterDlg,
+                                                        IncomeFilterDlg> {
 
     protected Map<String, Object> filters;
 
-    public ExpenseListView() {
-        super(ExpenseDto.class, ExpenseAlterDlg.class, ExpenseFilterDlg.class);
+    public IncomeListView() {
+        super(IncomeDto.class, IncomeAlterDlg.class, IncomeFilterDlg.class);
 
         filters = new HashMap<>();
 
