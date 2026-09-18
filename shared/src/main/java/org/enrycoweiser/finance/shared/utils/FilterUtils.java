@@ -15,4 +15,8 @@ public class FilterUtils {
     public static final String INCOME_MONEY = "MONEY";
     public static final String INCOME_CATEGORY = "CATEGORY";
     public static final String INCOME_PAYMENT_METHOD = "PAYMENT_METHOD";
+
+    /* PAYMENT METHOD */
+    public static final String PAYMENT_METHOD_NAME = "NAME";
+    public static final String PAYMENT_METHOD_ACTIVE = "ACTIVE";
 }

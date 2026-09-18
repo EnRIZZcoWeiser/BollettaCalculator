@@ -12,11 +12,11 @@ import java.util.Map;
 @Repository
 public class PaymentMethodRepositoryImpl implements PaymentMethodRepositoryExt {
 
-  @PersistenceContext
-  private EntityManager entityManager;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-  @Override
-  public List<PaymentMethod> retrieveByFilters(Map<String, Object> filters) {
-    return List.of();
-  }
+    @Override
+    public List<PaymentMethod> retrieveByFilters(Map<String, Object> filters) {
+        return List.of();
+    }
 }
