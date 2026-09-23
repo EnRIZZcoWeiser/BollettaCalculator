@@ -11,7 +11,9 @@ import java.util.Date;
 @Getter
 @Setter
 public class ExpenseRequest extends StandardRequest {
-    private Date date;
+    protected Date date;
+    protected Date dateFrom;
+    protected Date dateTo;
     private BigDecimal money;
     private String location;
     private String store;

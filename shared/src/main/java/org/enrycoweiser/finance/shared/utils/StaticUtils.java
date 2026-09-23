@@ -1,4 +1,4 @@
-package org.enrycoweiser.finance.backend.utils;
+package org.enrycoweiser.finance.shared.utils;
 
 import java.util.List;
 

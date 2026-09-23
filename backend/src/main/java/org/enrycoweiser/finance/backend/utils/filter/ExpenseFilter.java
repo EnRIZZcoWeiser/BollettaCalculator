@@ -14,8 +14,12 @@ public class ExpenseFilter {
             return filterMap;
         }
 
-        if(request.getDate() != null) {
-            filterMap.put(FilterUtils.EXPENSE_DATE, request.getDate());
+        if(request.getDateFrom() != null) {
+            filterMap.put(FilterUtils.EXPENSE_DATE_FROM, request.getDateFrom());
+        }
+
+        if(request.getDateTo() != null) {
+            filterMap.put(FilterUtils.EXPENSE_DATE_TO, request.getDateTo());
         }
 
         if(request.getMoney() != null && request.getMoney().compareTo(BigDecimal.ZERO) > 0) {
