@@ -12,6 +12,7 @@ import org.enrycoweiser.finance.shared.utils.FilterUtils;
 import org.enrycoweiser.finance.shared.utils.NameUtils;
 import org.enrycoweiser.finance.shared.utils.StaticUtils;
 
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -77,7 +78,30 @@ public class ExpenseFilterDlg extends StandardFilterDlg {
     protected void confirm() {
         filters.clear();
 
+        LocalDate dateFrom = dateFromTxt.getValue();
+        if(dateFrom != null) {
+            filters.put(FilterUtils.EXPENSE_DATE_FROM, dateFrom);
+        }
 
+        LocalDate dateTo = dateToTxt.getValue();
+        if(dateTo != null) {
+            filters.put(FilterUtils.EXPENSE_DATE_TO, dateTo);
+        }
+
+        String category = categoryCmb.getValue();
+        if(category != null && !category.isEmpty()) {
+            filters.put(FilterUtils.EXPENSE_CATEGORY, category);
+        }
+
+        String location = locationTxt.getValue();
+        if(location != null && !location.isEmpty()) {
+            filters.put(FilterUtils.EXPENSE_LOCATION, location);
+        }
+
+        String store = storeTxt.getValue();
+        if(store != null && !store.isEmpty()) {
+            filters.put(FilterUtils.EXPENSE_STORE, store);
+        }
     }
 
     protected void valueComboBoxes() {
@@ -100,12 +124,12 @@ public class ExpenseFilterDlg extends StandardFilterDlg {
     }
 
     protected void valueFields() {
-        if(filters.get(FilterUtils.EXPENSE_DATE_FROM) instanceof Date d) {
-            dateFromTxt.setValue(d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        if(filters.get(FilterUtils.EXPENSE_DATE_FROM) instanceof LocalDate d) {
+            dateFromTxt.setValue(d);
         }
 
-        if(filters.get(FilterUtils.EXPENSE_DATE_TO) instanceof Date d) {
-            dateToTxt.setValue(d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        if(filters.get(FilterUtils.EXPENSE_DATE_TO) instanceof LocalDate d) {
+            dateToTxt.setValue(d);
         }
 
         if(filters.get(FilterUtils.EXPENSE_CATEGORY) instanceof String s) {
@@ -119,5 +143,7 @@ public class ExpenseFilterDlg extends StandardFilterDlg {
         if(filters.get(FilterUtils.EXPENSE_STORE) instanceof String s) {
             storeTxt.setValue(s);
         }
+
+        paymentMethodCmb.setValue(null);
     }
 }

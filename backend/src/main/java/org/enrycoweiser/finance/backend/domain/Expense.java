@@ -7,13 +7,13 @@ import org.enrycoweiser.finance.backend.standard.StandardEntity;
 import org.enrycoweiser.finance.shared.dto.ExpenseDto;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @Entity
 public class Expense extends StandardEntity {
-    protected Date date;
+    protected LocalDate date;
     protected BigDecimal money;
     protected String location;
     protected String store;

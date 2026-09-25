@@ -6,12 +6,12 @@ import org.enrycoweiser.finance.backend.standard.StandardEntity;
 import org.enrycoweiser.finance.shared.dto.IncomeDto;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 public class Income extends StandardEntity {
-    private Date date;
+    private LocalDate date;
     private BigDecimal money;
     private String category;
     private PaymentMethod paymentMethod;

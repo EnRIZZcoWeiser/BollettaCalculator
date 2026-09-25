@@ -6,14 +6,14 @@ import org.enrycoweiser.finance.shared.dto.PaymentMethodDto;
 import org.enrycoweiser.finance.shared.standard.StandardRequest;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 public class ExpenseRequest extends StandardRequest {
-    protected Date date;
-    protected Date dateFrom;
-    protected Date dateTo;
+    protected LocalDate date;
+    protected LocalDate dateFrom;
+    protected LocalDate dateTo;
     private BigDecimal money;
     private String location;
     private String store;

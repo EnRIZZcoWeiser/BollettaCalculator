@@ -5,12 +5,12 @@ import lombok.Setter;
 import org.enrycoweiser.finance.shared.standard.StandardDto;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 public class IncomeDto extends StandardDto {
-    protected Date date;
+    protected LocalDate date;
     protected BigDecimal money;
     protected String category;
     protected PaymentMethodDto paymentMethodDto;

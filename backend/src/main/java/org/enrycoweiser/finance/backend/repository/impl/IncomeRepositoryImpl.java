@@ -9,7 +9,7 @@ import org.enrycoweiser.finance.shared.dto.PaymentMethodDto;
 import org.enrycoweiser.finance.shared.utils.FilterUtils;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -29,10 +29,10 @@ public class IncomeRepositoryImpl implements IncomeRepositoryExt {
 
         StringBuilder hql = new StringBuilder("from Income i where 1=1 ");
         hql.append("and i.userId = :userId ");
-        if(date_from instanceof Date) {
+        if(date_from instanceof LocalDate) {
             hql.append(" and i.date >= :date ");
         }
-        if(date_to instanceof Date) {
+        if(date_to instanceof LocalDate) {
             hql.append(" and i.date <= :date ");
         }
         if(money instanceof Double) {
@@ -46,10 +46,10 @@ public class IncomeRepositoryImpl implements IncomeRepositoryExt {
         }
 
         TypedQuery<Income> query = entityManager.createQuery(hql.toString(), Income.class);
-        if(date_from instanceof Date d) {
+        if(date_from instanceof LocalDate d) {
             query.setParameter("date_from", d);
         }
-        if(date_to instanceof Date d) {
+        if(date_to instanceof LocalDate d) {
             query.setParameter("date_to", d);
         }
         if(money instanceof Double m) {
