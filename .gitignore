@@ -35,3 +35,4 @@ shared/target/maven-archiver/pom.properties
 .idea/.copilot-plugin
 /frontend/.idea
 /.idea
+backend/src/main/resources/application-DEV.properties
