@@ -25,4 +25,15 @@ public class StaticUtils {
             EXPENSE_TRAVEL,
             EXPENSE_OTHER
     );
+
+    public static final String INCOME_SALARY = "SALARY";
+    public static final String INCOME_GIFTS = "GIFTS";
+    public static final String INCOME_REFUNDS = "REFUNDS";
+    public static final String INCOME_OTHER = "OTHERS";
+    public static final List<String> INCOME_CATEGORIES = List.of(
+            INCOME_SALARY,
+            INCOME_GIFTS,
+            INCOME_REFUNDS,
+            INCOME_OTHER
+    );
 }

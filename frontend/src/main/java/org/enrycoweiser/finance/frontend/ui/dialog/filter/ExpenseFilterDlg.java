@@ -89,17 +89,17 @@ public class ExpenseFilterDlg extends StandardFilterDlg {
         }
 
         String category = categoryCmb.getValue();
-        if(category != null && !category.isEmpty()) {
+        if(category != null && !category.isBlank()) {
             filters.put(FilterUtils.EXPENSE_CATEGORY, category);
         }
 
         String location = locationTxt.getValue();
-        if(location != null && !location.isEmpty()) {
+        if(location != null && !location.isBlank()) {
             filters.put(FilterUtils.EXPENSE_LOCATION, location);
         }
 
         String store = storeTxt.getValue();
-        if(store != null && !store.isEmpty()) {
+        if(store != null && !store.isBlank()) {
             filters.put(FilterUtils.EXPENSE_STORE, store);
         }
     }

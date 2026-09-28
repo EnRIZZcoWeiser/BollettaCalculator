@@ -26,15 +26,15 @@ public class ExpenseFilter {
             filterMap.put(FilterUtils.EXPENSE_MONEY, request.getMoney());
         }
 
-        if(request.getLocation() != null && !request.getLocation().isEmpty()) {
+        if(request.getLocation() != null && !request.getLocation().isBlank()) {
             filterMap.put(FilterUtils.EXPENSE_LOCATION, request.getLocation());
         }
 
-        if(request.getStore() != null && !request.getStore().isEmpty()) {
+        if(request.getStore() != null && !request.getStore().isBlank()) {
             filterMap.put(FilterUtils.EXPENSE_STORE, request.getStore());
         }
 
-        if(request.getCategory() != null && !request.getCategory().isEmpty()) {
+        if(request.getCategory() != null && !request.getCategory().isBlank()) {
             filterMap.put(FilterUtils.EXPENSE_CATEGORY, request.getCategory());
         }
 

@@ -26,7 +26,7 @@ public class IncomeFilter {
             filterMap.put(FilterUtils.INCOME_MONEY, request.getMoney());
         }
 
-        if(request.getCategory() != null && !request.getCategory().isEmpty()) {
+        if(request.getCategory() != null && !request.getCategory().isBlank()) {
             filterMap.put(FilterUtils.INCOME_CATEGORY, request.getCategory());
         }
 

@@ -8,9 +8,9 @@ import org.enrycoweiser.finance.frontend.controller.IncomeController;
 import org.enrycoweiser.finance.frontend.ui.dialog.alter.IncomeAlterDlg;
 import org.enrycoweiser.finance.frontend.ui.dialog.filter.IncomeFilterDlg;
 import org.enrycoweiser.finance.frontend.utils.NotificationHelper;
-import org.enrycoweiser.finance.shared.api.request.IncomeRequest;
 import org.enrycoweiser.finance.shared.api.response.IncomeResponse;
 import org.enrycoweiser.finance.shared.dto.IncomeDto;
+import org.enrycoweiser.finance.shared.utils.NotificationUtils;
 import org.enrycoweiser.finance.shared.utils.FilterUtils;
 import org.enrycoweiser.finance.shared.utils.NameUtils;
 import org.enrycoweiser.finance.shared.utils.StringUtils;
@@ -51,12 +51,12 @@ public class IncomeListView extends StandardListView<IncomeDto,
     protected void delete() {
         Set<IncomeDto> items = grid.getSelectedItems();
         if(items == null || items.isEmpty()) {
-            NotificationHelper.showErrorMessage("Select at least 1 row!");
+            NotificationHelper.showErrorMessage(NotificationUtils.NO_ROWS);
             return ;
         }
 
         if(items.size() > 1) {
-            NotificationHelper.showErrorMessage("Select only 1 row!");
+            NotificationHelper.showErrorMessage(NotificationUtils.MANY_ROWS);
             return;
         }
 
@@ -64,14 +64,14 @@ public class IncomeListView extends StandardListView<IncomeDto,
 
         IncomeResponse response = IncomeController.callDeleteAPI(id);
         if(response == null) {
-            NotificationHelper.showErrorMessage("Event Delete failed");
+            NotificationHelper.showErrorMessage(NameUtils.INCOME + NotificationUtils.DELETE_FAILED);
             return;
-        } else if(response.getStatus().equals(StringUtils.RESPONSE_KO)) {
-            NotificationHelper.showErrorMessage(response.getError());
+        } else if(response.getStatus() != null && response.getStatus().equals(StringUtils.RESPONSE_KO)) {
+            NotificationHelper.showErrorMessage(response.getErrorCode() + " - " + response.getError());
             return;
         }
 
-        NotificationHelper.showConfirmMessage("Success!");
+        NotificationHelper.showConfirmMessage(NotificationUtils.SUCCESS);
 
         this.refreshBtn();
     }
@@ -80,7 +80,10 @@ public class IncomeListView extends StandardListView<IncomeDto,
     protected void refreshBtn() {
         IncomeResponse response = IncomeController.callRefreshAPI(filters);
         if(response == null) {
-            NotificationHelper.showErrorMessage("Income Retrieve failed");
+            NotificationHelper.showErrorMessage(NameUtils.INCOME + NotificationUtils.RETRIEVE_FAILED);
+            return;
+        } else if(response.getStatus() != null && response.getStatus().equals(StringUtils.RESPONSE_KO)) {
+            NotificationHelper.showErrorMessage(response.getErrorCode() + " - " + response.getError());
             return;
         }
 
@@ -131,12 +134,12 @@ public class IncomeListView extends StandardListView<IncomeDto,
 
         Set<IncomeDto> items = grid.getSelectedItems();
         if(items == null || items.isEmpty()) {
-            NotificationHelper.showErrorMessage("Select at least 1 row!");
+            NotificationHelper.showErrorMessage(NotificationUtils.NO_ROWS);
             return null;
         }
 
         if(items.size() > 1) {
-            NotificationHelper.showErrorMessage("Select only 1 row!");
+            NotificationHelper.showErrorMessage(NotificationUtils.MANY_ROWS);
             return null;
         }
 

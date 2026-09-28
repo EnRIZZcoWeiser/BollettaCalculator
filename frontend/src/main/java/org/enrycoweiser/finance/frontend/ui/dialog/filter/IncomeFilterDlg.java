@@ -80,7 +80,7 @@ public class IncomeFilterDlg extends StandardFilterDlg {
         }
 
         String category = categoryCmb.getValue();
-        if(category != null && !category.isEmpty()) {
+        if(category != null && !category.isBlank()) {
             filters.put(FilterUtils.INCOME_CATEGORY, category);
         }
     }
