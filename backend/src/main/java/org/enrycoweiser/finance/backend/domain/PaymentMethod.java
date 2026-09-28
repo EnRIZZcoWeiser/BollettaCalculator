@@ -1,5 +1,7 @@
 package org.enrycoweiser.finance.backend.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -8,6 +10,8 @@ import org.enrycoweiser.finance.shared.dto.PaymentMethodDto;
 
 @Getter
 @Setter
+@Entity
+@Table(name = "payment_method")
 public class PaymentMethod extends StandardEntity {
     protected String name;
     protected Boolean active;

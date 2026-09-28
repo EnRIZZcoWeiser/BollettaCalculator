@@ -3,7 +3,8 @@ package org.enrycoweiser.finance.frontend.ui.dialog.filter;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.textfield.TextField;
+import lombok.Getter;
+import lombok.Setter;
 import org.enrycoweiser.finance.frontend.base.StandardFilterDlg;
 import org.enrycoweiser.finance.shared.dto.PaymentMethodDto;
 import org.enrycoweiser.finance.shared.utils.FilterUtils;
@@ -11,12 +12,11 @@ import org.enrycoweiser.finance.shared.utils.NameUtils;
 import org.enrycoweiser.finance.shared.utils.StaticUtils;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
+@Getter
+@Setter
 public class IncomeFilterDlg extends StandardFilterDlg {
     Map<String, Object> filters;
 

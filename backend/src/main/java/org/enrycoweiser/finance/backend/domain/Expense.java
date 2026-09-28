@@ -1,6 +1,9 @@
 package org.enrycoweiser.finance.backend.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.enrycoweiser.finance.backend.standard.StandardEntity;
@@ -12,13 +15,18 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
+@Table(name = "expense")
 public class Expense extends StandardEntity {
     protected LocalDate date;
     protected BigDecimal money;
     protected String location;
     protected String store;
     protected String category;
+
+    @ManyToOne
+    @JoinColumn(name = "id_payment_method")
     protected PaymentMethod paymentMethod;
+
     protected String note;
     protected Long userId;
 
