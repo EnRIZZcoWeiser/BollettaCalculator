@@ -15,4 +15,6 @@ public class NameUtils {
     public static final String STORE = "Store";
     public static final String PAYMENT_METHOD = "Payment Method";
     public static final String NOTE = "Note";
+    public static final String NAME = "Name";
+    public static final String ACTIVE = "Active";
 }
