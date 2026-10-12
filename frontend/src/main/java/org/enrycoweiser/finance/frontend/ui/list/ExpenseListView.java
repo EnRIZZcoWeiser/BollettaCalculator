@@ -2,13 +2,21 @@ package org.enrycoweiser.finance.frontend.ui.list;
 
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import org.enrycoweiser.finance.frontend.base.DeleteConfirmDlg;
 import org.enrycoweiser.finance.frontend.base.StandardListView;
+import org.enrycoweiser.finance.frontend.controller.ExpenseController;
 import org.enrycoweiser.finance.frontend.ui.dialog.alter.ExpenseAlterDlg;
 import org.enrycoweiser.finance.frontend.ui.dialog.filter.ExpenseFilterDlg;
+import org.enrycoweiser.finance.frontend.utils.NotificationHelper;
+import org.enrycoweiser.finance.shared.api.response.ExpenseResponse;
 import org.enrycoweiser.finance.shared.dto.ExpenseDto;
+import org.enrycoweiser.finance.shared.dto.IncomeDto;
+import org.enrycoweiser.finance.shared.utils.FilterUtils;
+import org.enrycoweiser.finance.shared.utils.NameUtils;
+import org.enrycoweiser.finance.shared.utils.NotificationUtils;
+import org.enrycoweiser.finance.shared.utils.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Route("/expense")
 @PageTitle("Expense")
@@ -28,31 +36,124 @@ public class ExpenseListView extends StandardListView<ExpenseDto,
 
     @Override
     protected void addBtn() {
+        ExpenseAlterDlg alterDlg = new ExpenseAlterDlg(NameUtils.EXPENSE, null, true);
+        alterDlg.setOnConfirm(this::refreshBtn);
 
+        alterDlg.open();
     }
 
     @Override
     protected void deleteBtn() {
+        DeleteConfirmDlg deleteDlg = new DeleteConfirmDlg();
+        deleteDlg.setOnConfirm(this::delete);
+        deleteDlg.open();
+    }
 
+    protected void delete() {
+        Set<ExpenseDto> items = grid.getSelectedItems();
+        if(items == null || items.isEmpty()) {
+            NotificationHelper.showErrorMessage(NotificationUtils.NO_ROWS);
+            return ;
+        }
+
+        if(items.size() > 1) {
+            NotificationHelper.showErrorMessage(NotificationUtils.MANY_ROWS);
+            return;
+        }
+
+        Long id = grid.getSelectedItems().iterator().next().getId();
+
+        ExpenseResponse response = ExpenseController.callDeleteAPI(id);
+        if(response == null) {
+            NotificationHelper.showErrorMessage(NameUtils.EXPENSE + NotificationUtils.DELETE_FAILED);
+            return;
+        } else if(response.getStatus() != null && response.getStatus().equals(StringUtils.RESPONSE_KO)) {
+            NotificationHelper.showErrorMessage(response.getErrorCode() + " - " + response.getError());
+            return;
+        }
+
+        NotificationHelper.showConfirmMessage(NotificationUtils.SUCCESS);
+
+        this.refreshBtn();
     }
 
     @Override
     protected void refreshBtn() {
+        ExpenseResponse response = ExpenseController.callRefreshAPI(filters);
+        if(response == null) {
+            NotificationHelper.showErrorMessage(NameUtils.EXPENSE + NotificationUtils.RETRIEVE_FAILED);
+            return;
+        } else if(response.getStatus() != null && response.getStatus().equals(StringUtils.RESPONSE_KO)) {
+            NotificationHelper.showErrorMessage(response.getErrorCode() + " - " + response.getError());
+            return;
+        }
 
+        List<ExpenseDto> expenses = response.getItems();
+        if(expenses == null) {
+            expenses = new ArrayList<>();
+        }
+
+        grid.setItems(expenses);
     }
 
     @Override
     protected void editBtn() {
+        Map<String, Object> data = createEditMap();
+        if(data == null) {
+            return;
+        }
 
+        ExpenseAlterDlg alterDlg = new ExpenseAlterDlg(NameUtils.EXPENSE, data, false);
+        alterDlg.setOnConfirm(this::refreshBtn);
+
+        alterDlg.open();
     }
 
     @Override
     protected void filterBtn() {
-
+        ExpenseFilterDlg filterDlg = new ExpenseFilterDlg(NameUtils.EXPENSE, filters);
+        filterDlg.setOnConfirm(() -> {
+            filters = filterDlg.getFilters();
+            refreshBtn();
+        });
     }
 
     @Override
     protected void configureColumns() {
+        grid.addColumn(ExpenseDto::getDate).setHeader(NameUtils.DATE);
+        grid.addColumn(ExpenseDto::getMoney).setHeader(NameUtils.MONEY);
+        grid.addColumn(ExpenseDto::getLocation).setHeader(NameUtils.LOCATION);
+        grid.addColumn(ExpenseDto::getStore).setHeader(NameUtils.STORE);
+        grid.addColumn(ExpenseDto::getCategory).setHeader(NameUtils.CATEGORY);
+        grid.addColumn(e -> e.getPaymentMethodDto() != null
+                ? e.getPaymentMethodDto().getName()
+                : "").setHeader(NameUtils.PAYMENT_METHOD);
+        grid.addColumn(ExpenseDto::getNote).setHeader(NameUtils.NOTE);
+    }
 
+    protected Map<String, Object> createEditMap() {
+        Map<String, Object> data = new HashMap<>();
+
+        Set<ExpenseDto> items = grid.getSelectedItems();
+        if(items == null || items.isEmpty()) {
+            NotificationHelper.showErrorMessage(NotificationUtils.NO_ROWS);
+            return null;
+        }
+
+        if(items.size() > 1) {
+            NotificationHelper.showErrorMessage(NotificationUtils.MANY_ROWS);
+            return null;
+        }
+
+        ExpenseDto e = grid.getSelectedItems().iterator().next();
+        data.put(FilterUtils.EXPENSE_DATE, e.getDate());
+        data.put(FilterUtils.EXPENSE_MONEY, e.getMoney());
+        data.put(FilterUtils.EXPENSE_LOCATION, e.getLocation());
+        data.put(FilterUtils.EXPENSE_STORE, e.getStore());
+        data.put(FilterUtils.EXPENSE_CATEGORY, e.getCategory());
+        data.put(FilterUtils.EXPENSE_PAYMENT_METHOD, e.getPaymentMethodDto());
+        data.put(FilterUtils.EXPENSE_NOTE, e.getNote());
+
+        return data;
     }
 }

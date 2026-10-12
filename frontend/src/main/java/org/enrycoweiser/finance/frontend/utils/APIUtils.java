@@ -13,8 +13,9 @@ public class APIUtils {
     public static final String DELETE = "/delete";
     public static final String REFRESH = "/filter";
 
-    public static final String INCOME = "/event";
-    public static final String EXPENSE = "/tournament";
+    public static final String INCOME = "/income";
+    public static final String EXPENSE = "/expense";
+    public static final String PAYMENT_METHOD = "/paymentMethod";
 
     public static final String API_ENTITY_INCOME_SAVE = BASE_URL + ENTITY + INCOME + SAVE;
     public static final String API_ENTITY_INCOME_DELETE = BASE_URL + ENTITY + INCOME + DELETE;
@@ -22,4 +23,7 @@ public class APIUtils {
     public static final String API_ENTITY_EXPENSE_SAVE = BASE_URL + ENTITY + EXPENSE + SAVE;
     public static final String API_ENTITY_EXPENSE_DELETE = BASE_URL + ENTITY + EXPENSE + DELETE;
     public static final String API_ENTITY_EXPENSE_REFRESH = BASE_URL + ENTITY + EXPENSE + REFRESH;
+    public static final String API_ENTITY_PAYMENT_METHOD_SAVE = BASE_URL + ENTITY + PAYMENT_METHOD + SAVE;
+    public static final String API_ENTITY_PAYMENT_METHOD_DELETE = BASE_URL + ENTITY + PAYMENT_METHOD + DELETE;
+    public static final String API_ENTITY_PAYMENT_METHOD_REFRESH = BASE_URL + ENTITY + PAYMENT_METHOD + REFRESH;
 }

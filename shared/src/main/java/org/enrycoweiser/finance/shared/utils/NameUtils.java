@@ -17,4 +17,5 @@ public class NameUtils {
     public static final String NOTE = "Note";
     public static final String NAME = "Name";
     public static final String ACTIVE = "Active";
+    public static final String ONLY_ACTIVE = "Only active";
 }

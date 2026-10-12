@@ -15,4 +15,6 @@ public class NotificationUtils {
     public static final String MONEY_REQUIRED = "Money required!";
     public static final String CATEGORY_REQUIRED = "Category required!";
     public static final String PAYMENT_METHOD_REQUIRED = "Payment method required!";
+    public static final String LOCATION_REQUIRED = "Location required!";
+    public static final String STORE_REQUIRED = "Store required!";
 }

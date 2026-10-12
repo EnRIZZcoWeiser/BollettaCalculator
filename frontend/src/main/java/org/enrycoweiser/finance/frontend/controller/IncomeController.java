@@ -40,6 +40,14 @@ public class IncomeController {
             req.setDate(d);
         }
 
+        if(data.get(FilterUtils.INCOME_DATE_TO) instanceof LocalDate d) {
+            req.setDateTo(d);
+        }
+
+        if(data.get(FilterUtils.INCOME_DATE_FROM) instanceof LocalDate d) {
+            req.setDateFrom(d);
+        }
+
         if(data.get(FilterUtils.INCOME_MONEY) instanceof BigDecimal b) {
             req.setMoney(b);
         }

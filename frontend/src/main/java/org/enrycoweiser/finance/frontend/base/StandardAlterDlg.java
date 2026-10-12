@@ -4,6 +4,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import org.enrycoweiser.finance.frontend.utils.NotificationHelper;
 
 public abstract class StandardAlterDlg extends Dialog {
 
@@ -35,5 +36,17 @@ public abstract class StandardAlterDlg extends Dialog {
         this.getFooter().add(cancelButton, confirmButton);
     }
 
-    protected abstract void confirmButtonClicked();
+    protected void confirmButtonClicked() {
+        String error = checkData();
+        if(error != null) {
+            NotificationHelper.showErrorMessage(error);
+            return;
+        }
+
+        confirm();
+    }
+
+    protected abstract void confirm();
+
+    protected abstract String checkData();
 }

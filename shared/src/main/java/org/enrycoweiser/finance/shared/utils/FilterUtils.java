@@ -10,6 +10,7 @@ public class FilterUtils {
     public static final String EXPENSE_STORE = "STORE";
     public static final String EXPENSE_CATEGORY = "CATEGORY";
     public static final String EXPENSE_PAYMENT_METHOD = "PAYMENT_METHOD";
+    public static final String EXPENSE_NOTE = "NOTE";
 
     /* INCOME */
     public static final String INCOME_DATE_FROM = "DATE_FROM";
@@ -23,4 +24,5 @@ public class FilterUtils {
     /* PAYMENT METHOD */
     public static final String PAYMENT_METHOD_NAME = "NAME";
     public static final String PAYMENT_METHOD_ACTIVE = "ACTIVE";
+    public static final String PAYMENT_METHOD_ONLY_ACTIVE = "ONLY_ACTIVE";
 }

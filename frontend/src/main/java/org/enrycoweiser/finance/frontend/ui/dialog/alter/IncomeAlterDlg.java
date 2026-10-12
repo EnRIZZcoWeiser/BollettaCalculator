@@ -115,17 +115,6 @@ public class IncomeAlterDlg extends StandardAlterDlg {
         return layout;
     }
 
-    @Override
-    protected void confirmButtonClicked() {
-        String error = checkData();
-        if(error != null) {
-            NotificationHelper.showErrorMessage(error);
-            return;
-        }
-
-        confirm();
-    }
-
     protected void confirm() {
         Map<String, Object> data = createDataMap();
 

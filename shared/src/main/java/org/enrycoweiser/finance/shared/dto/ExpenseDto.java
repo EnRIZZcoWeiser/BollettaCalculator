@@ -14,7 +14,7 @@ public class ExpenseDto extends StandardDto {
     protected String location;
     protected String store;
     protected String category;
-    protected PaymentMethodDto paymentMethod;
+    protected PaymentMethodDto paymentMethodDto;
     protected String note;
     protected Long userId;
 }
