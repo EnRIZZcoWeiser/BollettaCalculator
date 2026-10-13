@@ -3,13 +3,22 @@ package org.enrycoweiser.finance.frontend.ui.dialog.alter;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import lombok.Getter;
+import lombok.Setter;
 import org.enrycoweiser.finance.frontend.base.StandardAlterDlg;
+import org.enrycoweiser.finance.frontend.controller.PaymentMethodController;
 import org.enrycoweiser.finance.frontend.utils.NotificationHelper;
+import org.enrycoweiser.finance.shared.api.response.PaymentMethodResponse;
 import org.enrycoweiser.finance.shared.utils.FilterUtils;
 import org.enrycoweiser.finance.shared.utils.NameUtils;
+import org.enrycoweiser.finance.shared.utils.NotificationUtils;
+import org.enrycoweiser.finance.shared.utils.StringUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
+@Getter
+@Setter
 public class PaymentMethodAlterDlg extends StandardAlterDlg {
     protected TextField nameTxt;
     protected Checkbox activeChk;
@@ -55,18 +64,42 @@ public class PaymentMethodAlterDlg extends StandardAlterDlg {
         return layout;
     }
 
-    @Override
-    protected void confirmButtonClicked() {
-        String error = checkData();
-        if(error != null) {
-            NotificationHelper.showErrorMessage(error);
+    protected void confirm() {
+        Map<String, Object> data = createDataMap();
+
+        PaymentMethodResponse res = PaymentMethodController.callAlterAPI(data);
+        if(res == null) {
+            NotificationHelper.showErrorMessage(NameUtils.PAYMENT_METHOD + NotificationUtils.SAVE_FAILED);
+            return;
+        } else if(res.getStatus().equals(StringUtils.RESPONSE_KO)) {
+            NotificationHelper.showErrorMessage(res.getError());
             return;
         }
 
-        confirm();
+        NotificationHelper.showConfirmMessage(NotificationUtils.SUCCESS);
+
+        this.close();
+
+        if(onConfirm != null) {
+            onConfirm.run();
+        }
     }
 
-    protected void confirm() {
+    @Override
+    protected String checkData() {
+        if(nameTxt.getValue() == null || nameTxt.getValue().isBlank()) {
+            return NotificationUtils.NAME_REQUIRED;
+        }
 
+        return null;
+    }
+
+    protected Map<String, Object> createDataMap() {
+        Map<String, Object> data = new HashMap<>();
+
+        data.put(FilterUtils.PAYMENT_METHOD_NAME, nameTxt.getValue());
+        data.put(FilterUtils.PAYMENT_METHOD_ACTIVE, activeChk.getValue());
+
+        return data;
     }
 }

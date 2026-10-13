@@ -39,9 +39,9 @@ public class Expense extends StandardEntity {
         dto.setStore(store);
         dto.setCategory(category);
         if(paymentMethod != null) {
-            dto.setPaymentMethod(paymentMethod.toDto());
+            dto.setPaymentMethodDto(paymentMethod.toDto());
         } else {
-            dto.setPaymentMethod(null);
+            dto.setPaymentMethodDto(null);
         }
         dto.setNote(note);
         dto.setUserId(userId);

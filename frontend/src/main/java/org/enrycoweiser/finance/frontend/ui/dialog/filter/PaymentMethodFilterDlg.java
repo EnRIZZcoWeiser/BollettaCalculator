@@ -4,12 +4,16 @@ package org.enrycoweiser.finance.frontend.ui.dialog.filter;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import lombok.Getter;
+import lombok.Setter;
 import org.enrycoweiser.finance.frontend.base.StandardFilterDlg;
 import org.enrycoweiser.finance.shared.utils.FilterUtils;
 import org.enrycoweiser.finance.shared.utils.NameUtils;
 
 import java.util.Map;
 
+@Getter
+@Setter
 public class PaymentMethodFilterDlg extends StandardFilterDlg {
     Map<String, Object> filters;
 

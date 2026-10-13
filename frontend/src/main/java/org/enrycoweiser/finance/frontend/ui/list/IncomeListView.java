@@ -10,9 +10,9 @@ import org.enrycoweiser.finance.frontend.ui.dialog.filter.IncomeFilterDlg;
 import org.enrycoweiser.finance.frontend.utils.NotificationHelper;
 import org.enrycoweiser.finance.shared.api.response.IncomeResponse;
 import org.enrycoweiser.finance.shared.dto.IncomeDto;
-import org.enrycoweiser.finance.shared.utils.NotificationUtils;
 import org.enrycoweiser.finance.shared.utils.FilterUtils;
 import org.enrycoweiser.finance.shared.utils.NameUtils;
+import org.enrycoweiser.finance.shared.utils.NotificationUtils;
 import org.enrycoweiser.finance.shared.utils.StringUtils;
 
 import java.util.*;
@@ -45,6 +45,7 @@ public class IncomeListView extends StandardListView<IncomeDto,
     protected void deleteBtn() {
         DeleteConfirmDlg deleteDlg = new DeleteConfirmDlg();
         deleteDlg.setOnConfirm(this::delete);
+
         deleteDlg.open();
     }
 
