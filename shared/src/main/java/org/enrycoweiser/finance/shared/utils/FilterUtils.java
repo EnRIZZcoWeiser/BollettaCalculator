@@ -1,6 +1,9 @@
 package org.enrycoweiser.finance.shared.utils;
 
 public class FilterUtils {
+    /* GENERAL */
+    public static final String ID = "ID";
+
     /* EXPENSE */
     public static final String EXPENSE_DATE_FROM = "DATE_FROM";
     public static final String EXPENSE_DATE_TO = "DATE_TO";

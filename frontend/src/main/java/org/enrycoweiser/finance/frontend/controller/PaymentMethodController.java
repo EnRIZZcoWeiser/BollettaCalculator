@@ -3,7 +3,6 @@ package org.enrycoweiser.finance.frontend.controller;
 import org.enrycoweiser.finance.frontend.utils.APIUtils;
 import org.enrycoweiser.finance.frontend.utils.ErrorUtils;
 import org.enrycoweiser.finance.shared.api.request.PaymentMethodRequest;
-import org.enrycoweiser.finance.shared.api.response.ExpenseResponse;
 import org.enrycoweiser.finance.shared.api.response.PaymentMethodResponse;
 import org.enrycoweiser.finance.shared.utils.FilterUtils;
 import org.springframework.http.*;
@@ -33,6 +32,10 @@ public class PaymentMethodController {
 
     public static PaymentMethodRequest assignValuesRequest(Map<String, Object> data) {
         PaymentMethodRequest req = new PaymentMethodRequest();
+
+        if(data.get(FilterUtils.ID) instanceof Long l) {
+            req.setId(l);
+        }
 
         if(data.get(FilterUtils.PAYMENT_METHOD_NAME) instanceof String s) {
             req.setName(s);

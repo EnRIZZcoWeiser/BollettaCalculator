@@ -5,6 +5,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import org.enrycoweiser.finance.backend.domain.Income;
 import org.enrycoweiser.finance.backend.repository.ext.IncomeRepositoryExt;
+import org.enrycoweiser.finance.backend.security.SEManager;
 import org.enrycoweiser.finance.shared.dto.PaymentMethodDto;
 import org.enrycoweiser.finance.shared.utils.FilterUtils;
 import org.springframework.stereotype.Repository;
@@ -46,6 +47,7 @@ public class IncomeRepositoryImpl implements IncomeRepositoryExt {
         }
 
         TypedQuery<Income> query = entityManager.createQuery(hql.toString(), Income.class);
+        query.setParameter("userId", SEManager.getId());
         if(date_from instanceof LocalDate d) {
             query.setParameter("date_from", d);
         }

@@ -24,6 +24,7 @@ public class PaymentMethodAlterDlg extends StandardAlterDlg {
     protected Checkbox activeChk;
 
     protected boolean newItem;
+    protected Long idDto;
 
     protected Runnable onConfirm;
 
@@ -33,6 +34,7 @@ public class PaymentMethodAlterDlg extends StandardAlterDlg {
         this.newItem = newItem;
 
         setFields(values);
+        setId(values);
     }
 
     protected void setFields(Map<String, Object> values) {
@@ -46,6 +48,16 @@ public class PaymentMethodAlterDlg extends StandardAlterDlg {
 
         if(values.get(FilterUtils.PAYMENT_METHOD_ACTIVE) instanceof Boolean b) {
             activeChk.setValue(b);
+        }
+    }
+
+    protected void setId(Map<String, Object> values) {
+        if(values == null || values.isEmpty()) {
+            return;
+        }
+
+        if(values.get(FilterUtils.ID) instanceof Long l) {
+            this.idDto = l;
         }
     }
 
@@ -97,6 +109,7 @@ public class PaymentMethodAlterDlg extends StandardAlterDlg {
     protected Map<String, Object> createDataMap() {
         Map<String, Object> data = new HashMap<>();
 
+        data.put(FilterUtils.ID, idDto);
         data.put(FilterUtils.PAYMENT_METHOD_NAME, nameTxt.getValue());
         data.put(FilterUtils.PAYMENT_METHOD_ACTIVE, activeChk.getValue());
 

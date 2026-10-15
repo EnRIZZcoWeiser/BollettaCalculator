@@ -2,7 +2,7 @@ package org.enrycoweiser.finance.frontend.utils;
 
 public class APIUtils {
     public static final String IP = "http://localhost";
-    public static final String PORT = "8081";
+    public static final String PORT = "8080";
     public static final String PATH = "/api";
 
     public static final String BASE_URL = IP + ":" + PORT + PATH;

@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.enrycoweiser.finance.backend.domain.PaymentMethod;
 import org.enrycoweiser.finance.backend.repository.PaymentMethodRepository;
+import org.enrycoweiser.finance.backend.security.SEManager;
 import org.enrycoweiser.finance.backend.standard.EntityService;
 import org.enrycoweiser.finance.backend.utils.ErrorUtils;
 import org.enrycoweiser.finance.backend.utils.filter.PaymentMethodFilter;
@@ -43,10 +44,11 @@ public class PaymentMethodService implements EntityService<PaymentMethodDto,
             pm = paymentMethod.get();
         } else {
             pm = new PaymentMethod();
-            pm.setName(request.getName());
-            pm.setActive(request.getActive());
-            pm.setUserId(request.getUserId());
+            pm.setUserId(SEManager.getId());
         }
+
+        pm.setName(request.getName());
+        pm.setActive(request.getActive());
 
         try {
             paymentMethodRepository.save(pm);
@@ -107,7 +109,7 @@ public class PaymentMethodService implements EntityService<PaymentMethodDto,
 
             pmResponse = new PaymentMethodResponse(dtos);
         } catch (Exception ex) {
-            pmResponse.createErrorResponse("", "");
+            pmResponse.createErrorResponse(ex.getMessage(), ErrorUtils.EXC_001);
             return pmResponse;
         }
 

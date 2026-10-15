@@ -5,6 +5,7 @@ import com.vaadin.flow.router.Route;
 import org.enrycoweiser.finance.frontend.base.DeleteConfirmDlg;
 import org.enrycoweiser.finance.frontend.base.StandardListView;
 import org.enrycoweiser.finance.frontend.controller.PaymentMethodController;
+import org.enrycoweiser.finance.frontend.ui.DashboardView;
 import org.enrycoweiser.finance.frontend.ui.dialog.alter.PaymentMethodAlterDlg;
 import org.enrycoweiser.finance.frontend.ui.dialog.filter.PaymentMethodFilterDlg;
 import org.enrycoweiser.finance.frontend.utils.NotificationHelper;
@@ -17,7 +18,7 @@ import org.enrycoweiser.finance.shared.utils.StringUtils;
 
 import java.util.*;
 
-@Route("/paymentMethod")
+@Route(value = "/paymentMethod", layout = DashboardView.class)
 @PageTitle("Payment Method")
 public class PaymentMethodListView extends StandardListView<PaymentMethodDto,
                                                             PaymentMethodAlterDlg,
@@ -26,7 +27,7 @@ public class PaymentMethodListView extends StandardListView<PaymentMethodDto,
     protected Map<String, Object> filters;
 
     public PaymentMethodListView() {
-        super(PaymentMethodDto.class, PaymentMethodAlterDlg.class, PaymentMethodFilterDlg.class);
+        super(PaymentMethodAlterDlg.class, PaymentMethodFilterDlg.class);
 
         filters = new HashMap<>();
 
@@ -140,6 +141,7 @@ public class PaymentMethodListView extends StandardListView<PaymentMethodDto,
         }
 
         PaymentMethodDto p = grid.getSelectedItems().iterator().next();
+        data.put(FilterUtils.ID, p.getId());
         data.put(FilterUtils.PAYMENT_METHOD_NAME, p.getName());
         data.put(FilterUtils.PAYMENT_METHOD_ACTIVE, p.getActive());
 

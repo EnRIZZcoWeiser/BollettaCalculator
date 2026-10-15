@@ -4,7 +4,6 @@ import org.enrycoweiser.finance.frontend.utils.APIUtils;
 import org.enrycoweiser.finance.frontend.utils.ErrorUtils;
 import org.enrycoweiser.finance.shared.api.request.ExpenseRequest;
 import org.enrycoweiser.finance.shared.api.response.ExpenseResponse;
-import org.enrycoweiser.finance.shared.api.response.IncomeResponse;
 import org.enrycoweiser.finance.shared.dto.PaymentMethodDto;
 import org.enrycoweiser.finance.shared.utils.FilterUtils;
 import org.springframework.http.*;
@@ -36,6 +35,10 @@ public class ExpenseController {
 
     public static ExpenseRequest assignValuesRequest(Map<String, Object> data) {
         ExpenseRequest req = new ExpenseRequest();
+
+        if(data.get(FilterUtils.ID) instanceof Long l) {
+            req.setId(l);
+        }
 
         if(data.get(FilterUtils.EXPENSE_DATE) instanceof LocalDate d) {
             req.setDate(d);

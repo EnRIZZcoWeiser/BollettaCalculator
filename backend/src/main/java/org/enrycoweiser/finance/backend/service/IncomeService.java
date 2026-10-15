@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.enrycoweiser.finance.backend.domain.Income;
 import org.enrycoweiser.finance.backend.domain.PaymentMethod;
 import org.enrycoweiser.finance.backend.repository.IncomeRepository;
+import org.enrycoweiser.finance.backend.security.SEManager;
 import org.enrycoweiser.finance.backend.standard.EntityService;
 import org.enrycoweiser.finance.backend.utils.ErrorUtils;
 import org.enrycoweiser.finance.backend.utils.filter.IncomeFilter;
@@ -43,13 +44,14 @@ public class IncomeService implements EntityService<IncomeDto,
             i = income.get();
         } else {
             i = new Income();
-            i.setDate(request.getDate());
-            i.setMoney(request.getMoney());
-            i.setCategory(request.getCategory());
-            i.setPaymentMethod(new PaymentMethod(request.getPaymentMethod()));
-            i.setNote(request.getNote());
-            i.setUserId(request.getUserId());
+            i.setUserId(SEManager.getId());
         }
+
+        i.setDate(request.getDate());
+        i.setMoney(request.getMoney());
+        i.setCategory(request.getCategory());
+        i.setPaymentMethod(new PaymentMethod(request.getPaymentMethod()));
+        i.setNote(request.getNote());
 
         try {
             incomeRepository.save(i);

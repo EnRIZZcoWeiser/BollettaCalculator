@@ -30,6 +30,7 @@ public class IncomeAlterDlg extends StandardAlterDlg {
     protected TextField noteTxt;
 
     protected boolean newItem;
+    protected Long idDto;
 
     protected Runnable onConfirm;
 
@@ -40,6 +41,7 @@ public class IncomeAlterDlg extends StandardAlterDlg {
 
         valueComboBoxes();
         setFields(values);
+        setId(values);
     }
 
     protected void valueComboBoxes() {
@@ -91,6 +93,16 @@ public class IncomeAlterDlg extends StandardAlterDlg {
 
         if(values.get(FilterUtils.INCOME_NOTE) instanceof String s) {
             noteTxt.setValue(s);
+        }
+    }
+
+    protected void setId(Map<String, Object> values) {
+        if(values == null || values.isEmpty()) {
+            return;
+        }
+
+        if(values.get(FilterUtils.ID) instanceof Long l) {
+            this.idDto = l;
         }
     }
 
@@ -158,6 +170,8 @@ public class IncomeAlterDlg extends StandardAlterDlg {
 
     protected Map<String, Object> createDataMap() {
         Map<String, Object> data = new HashMap<>();
+
+        data.put(FilterUtils.ID, idDto);
 
         /* mandatory data */
         data.put(FilterUtils.INCOME_DATE, dateTxt.getValue());

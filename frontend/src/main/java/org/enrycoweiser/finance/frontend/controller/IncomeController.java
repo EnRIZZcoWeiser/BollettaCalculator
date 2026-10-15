@@ -36,6 +36,10 @@ public class IncomeController {
     public static IncomeRequest assignValuesRequest(Map<String, Object> data) {
         IncomeRequest req = new IncomeRequest();
 
+        if(data.get(FilterUtils.ID) instanceof Long l) {
+            req.setId(l);
+        }
+
         if(data.get(FilterUtils.INCOME_DATE) instanceof LocalDate d) {
             req.setDate(d);
         }

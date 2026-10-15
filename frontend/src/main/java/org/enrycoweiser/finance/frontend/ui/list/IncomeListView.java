@@ -5,6 +5,7 @@ import com.vaadin.flow.router.Route;
 import org.enrycoweiser.finance.frontend.base.DeleteConfirmDlg;
 import org.enrycoweiser.finance.frontend.base.StandardListView;
 import org.enrycoweiser.finance.frontend.controller.IncomeController;
+import org.enrycoweiser.finance.frontend.ui.DashboardView;
 import org.enrycoweiser.finance.frontend.ui.dialog.alter.IncomeAlterDlg;
 import org.enrycoweiser.finance.frontend.ui.dialog.filter.IncomeFilterDlg;
 import org.enrycoweiser.finance.frontend.utils.NotificationHelper;
@@ -17,7 +18,7 @@ import org.enrycoweiser.finance.shared.utils.StringUtils;
 
 import java.util.*;
 
-@Route("/income")
+@Route(value = "/income", layout = DashboardView.class)
 @PageTitle("Income")
 public class IncomeListView extends StandardListView<IncomeDto,
                                                         IncomeAlterDlg,
@@ -26,7 +27,7 @@ public class IncomeListView extends StandardListView<IncomeDto,
     protected Map<String, Object> filters;
 
     public IncomeListView() {
-        super(IncomeDto.class, IncomeAlterDlg.class, IncomeFilterDlg.class);
+        super(IncomeAlterDlg.class, IncomeFilterDlg.class);
 
         filters = new HashMap<>();
 
@@ -145,6 +146,7 @@ public class IncomeListView extends StandardListView<IncomeDto,
         }
 
         IncomeDto i = grid.getSelectedItems().iterator().next();
+        data.put(FilterUtils.ID, i.getId());
         data.put(FilterUtils.INCOME_DATE, i.getDate());
         data.put(FilterUtils.INCOME_MONEY, i.getMoney());
         data.put(FilterUtils.INCOME_CATEGORY, i.getCategory());

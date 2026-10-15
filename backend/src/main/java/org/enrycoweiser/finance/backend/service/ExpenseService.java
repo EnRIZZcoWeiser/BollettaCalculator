@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.enrycoweiser.finance.backend.domain.Expense;
 import org.enrycoweiser.finance.backend.domain.PaymentMethod;
 import org.enrycoweiser.finance.backend.repository.ExpenseRepository;
+import org.enrycoweiser.finance.backend.security.SEManager;
 import org.enrycoweiser.finance.backend.standard.EntityService;
 import org.enrycoweiser.finance.backend.utils.ErrorUtils;
 import org.enrycoweiser.finance.backend.utils.filter.ExpenseFilter;
@@ -13,7 +14,10 @@ import org.enrycoweiser.finance.shared.api.response.ExpenseResponse;
 import org.enrycoweiser.finance.shared.dto.ExpenseDto;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,15 +45,16 @@ public class ExpenseService implements EntityService<ExpenseDto,
             e = expense.get();
         } else {
             e = new Expense();
-            e.setDate(request.getDate());
-            e.setMoney(request.getMoney());
-            e.setLocation(request.getLocation());
-            e.setStore(request.getStore());
-            e.setCategory(request.getCategory());
-            e.setPaymentMethod(new PaymentMethod(request.getPaymentMethod()));
-            e.setNote(request.getNote());
-            e.setUserId(request.getUserId());
+            e.setUserId(SEManager.getId());
         }
+
+        e.setDate(request.getDate());
+        e.setMoney(request.getMoney());
+        e.setLocation(request.getLocation());
+        e.setStore(request.getStore());
+        e.setCategory(request.getCategory());
+        e.setPaymentMethod(new PaymentMethod(request.getPaymentMethod()));
+        e.setNote(request.getNote());
 
         try {
             expenseRepository.save(e);

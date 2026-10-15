@@ -20,8 +20,8 @@ public abstract class StandardListView<E extends StandardDto,
     protected ALT alterDlg;
     protected FIL filterDlg;
 
-    public StandardListView(Class<E> entityClass, Class<ALT> alterDlgClass, Class<FIL> filterDlgClass) {
-        grid = new Grid<>(entityClass);
+    public StandardListView(Class<ALT> alterDlgClass, Class<FIL> filterDlgClass) {
+        grid = new Grid<>();
 
         try {
             alterDlg = alterDlgClass.getDeclaredConstructor().newInstance();
@@ -45,12 +45,19 @@ public abstract class StandardListView<E extends StandardDto,
             FOOTER
          */
         VerticalLayout layout = new VerticalLayout();
+        layout.setSizeFull();
+
+        Component toolbar = createContentToolbar();
+        Component data = createContentData();
+        Component footer = createContentFooter();
 
         layout.add(
-                createContentToolbar(),
-                createContentData(),
-                createContentFooter()
+                toolbar,
+                data,
+                footer
         );
+
+        layout.expand(data);
 
         return layout;
     }
@@ -189,6 +196,8 @@ public abstract class StandardListView<E extends StandardDto,
         content.add(
                 createContentGrid()
         );
+
+        content.expand(grid);
 
         return content;
     }

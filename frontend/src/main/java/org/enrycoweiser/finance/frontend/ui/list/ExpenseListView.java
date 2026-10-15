@@ -5,12 +5,12 @@ import com.vaadin.flow.router.Route;
 import org.enrycoweiser.finance.frontend.base.DeleteConfirmDlg;
 import org.enrycoweiser.finance.frontend.base.StandardListView;
 import org.enrycoweiser.finance.frontend.controller.ExpenseController;
+import org.enrycoweiser.finance.frontend.ui.DashboardView;
 import org.enrycoweiser.finance.frontend.ui.dialog.alter.ExpenseAlterDlg;
 import org.enrycoweiser.finance.frontend.ui.dialog.filter.ExpenseFilterDlg;
 import org.enrycoweiser.finance.frontend.utils.NotificationHelper;
 import org.enrycoweiser.finance.shared.api.response.ExpenseResponse;
 import org.enrycoweiser.finance.shared.dto.ExpenseDto;
-import org.enrycoweiser.finance.shared.dto.IncomeDto;
 import org.enrycoweiser.finance.shared.utils.FilterUtils;
 import org.enrycoweiser.finance.shared.utils.NameUtils;
 import org.enrycoweiser.finance.shared.utils.NotificationUtils;
@@ -18,7 +18,7 @@ import org.enrycoweiser.finance.shared.utils.StringUtils;
 
 import java.util.*;
 
-@Route("/expense")
+@Route(value = "/expense", layout = DashboardView.class)
 @PageTitle("Expense")
 public class ExpenseListView extends StandardListView<ExpenseDto,
                                                         ExpenseAlterDlg,
@@ -27,7 +27,7 @@ public class ExpenseListView extends StandardListView<ExpenseDto,
     protected Map<String, Object> filters;
 
     public ExpenseListView() {
-        super(ExpenseDto.class, ExpenseAlterDlg.class, ExpenseFilterDlg.class);
+        super(ExpenseAlterDlg.class, ExpenseFilterDlg.class);
 
         filters = new HashMap<>();
 
@@ -146,6 +146,7 @@ public class ExpenseListView extends StandardListView<ExpenseDto,
         }
 
         ExpenseDto e = grid.getSelectedItems().iterator().next();
+        data.put(FilterUtils.ID, e.getId());
         data.put(FilterUtils.EXPENSE_DATE, e.getDate());
         data.put(FilterUtils.EXPENSE_MONEY, e.getMoney());
         data.put(FilterUtils.EXPENSE_LOCATION, e.getLocation());
