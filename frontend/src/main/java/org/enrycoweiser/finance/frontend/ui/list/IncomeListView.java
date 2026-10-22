@@ -52,15 +52,6 @@ public class IncomeListView extends StandardListView<IncomeDto,
 
     protected void delete() {
         Set<IncomeDto> items = grid.getSelectedItems();
-        if(items == null || items.isEmpty()) {
-            NotificationHelper.showErrorMessage(NotificationUtils.NO_ROWS);
-            return ;
-        }
-
-        if(items.size() > 1) {
-            NotificationHelper.showErrorMessage(NotificationUtils.MANY_ROWS);
-            return;
-        }
 
         Long id = grid.getSelectedItems().iterator().next().getId();
 
@@ -135,15 +126,6 @@ public class IncomeListView extends StandardListView<IncomeDto,
         Map<String, Object> data = new HashMap<>();
 
         Set<IncomeDto> items = grid.getSelectedItems();
-        if(items == null || items.isEmpty()) {
-            NotificationHelper.showErrorMessage(NotificationUtils.NO_ROWS);
-            return null;
-        }
-
-        if(items.size() > 1) {
-            NotificationHelper.showErrorMessage(NotificationUtils.MANY_ROWS);
-            return null;
-        }
 
         IncomeDto i = grid.getSelectedItems().iterator().next();
         data.put(FilterUtils.ID, i.getId());

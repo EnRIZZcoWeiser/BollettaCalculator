@@ -52,15 +52,6 @@ public class PaymentMethodListView extends StandardListView<PaymentMethodDto,
 
     protected void delete() {
         Set<PaymentMethodDto> items = grid.getSelectedItems();
-        if(items == null || items.isEmpty()) {
-            NotificationHelper.showErrorMessage(NotificationUtils.NO_ROWS);
-            return ;
-        }
-
-        if(items.size() > 1) {
-            NotificationHelper.showErrorMessage(NotificationUtils.MANY_ROWS);
-            return;
-        }
 
         Long id = grid.getSelectedItems().iterator().next().getId();
 
@@ -128,17 +119,6 @@ public class PaymentMethodListView extends StandardListView<PaymentMethodDto,
 
     protected Map<String, Object> createEditMap() {
         Map<String, Object> data = new HashMap<>();
-
-        Set<PaymentMethodDto> items = grid.getSelectedItems();
-        if(items == null || items.isEmpty()) {
-            NotificationHelper.showErrorMessage(NotificationUtils.NO_ROWS);
-            return null;
-        }
-
-        if(items.size() > 1) {
-            NotificationHelper.showErrorMessage(NotificationUtils.MANY_ROWS);
-            return null;
-        }
 
         PaymentMethodDto p = grid.getSelectedItems().iterator().next();
         data.put(FilterUtils.ID, p.getId());

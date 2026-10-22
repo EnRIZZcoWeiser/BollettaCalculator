@@ -51,15 +51,6 @@ public class ExpenseListView extends StandardListView<ExpenseDto,
 
     protected void delete() {
         Set<ExpenseDto> items = grid.getSelectedItems();
-        if(items == null || items.isEmpty()) {
-            NotificationHelper.showErrorMessage(NotificationUtils.NO_ROWS);
-            return ;
-        }
-
-        if(items.size() > 1) {
-            NotificationHelper.showErrorMessage(NotificationUtils.MANY_ROWS);
-            return;
-        }
 
         Long id = grid.getSelectedItems().iterator().next().getId();
 
@@ -135,15 +126,6 @@ public class ExpenseListView extends StandardListView<ExpenseDto,
         Map<String, Object> data = new HashMap<>();
 
         Set<ExpenseDto> items = grid.getSelectedItems();
-        if(items == null || items.isEmpty()) {
-            NotificationHelper.showErrorMessage(NotificationUtils.NO_ROWS);
-            return null;
-        }
-
-        if(items.size() > 1) {
-            NotificationHelper.showErrorMessage(NotificationUtils.MANY_ROWS);
-            return null;
-        }
 
         ExpenseDto e = grid.getSelectedItems().iterator().next();
         data.put(FilterUtils.ID, e.getId());
