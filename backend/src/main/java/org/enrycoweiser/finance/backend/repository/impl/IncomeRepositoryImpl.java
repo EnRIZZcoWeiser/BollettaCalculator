@@ -22,52 +22,52 @@ public class IncomeRepositoryImpl implements IncomeRepositoryExt {
 
     @Override
     public List<Income> retrieveByFilters(Map<String, Object> filters) {
-        Object date_from = filters.get(FilterUtils.INCOME_DATE_FROM);
-        Object date_to = filters.get(FilterUtils.INCOME_DATE_TO);
-        Object money = filters.get(FilterUtils.INCOME_MONEY);
+        Object dateFrom = filters.get(FilterUtils.INCOME_DATE_FROM);
+        Object dateTo = filters.get(FilterUtils.INCOME_DATE_TO);
         Object category = filters.get(FilterUtils.INCOME_CATEGORY);
         Object paymentMethod = filters.get(FilterUtils.INCOME_PAYMENT_METHOD);
 
         StringBuilder hql = new StringBuilder("from Income i where 1=1 ");
         hql.append("and i.userId = :userId ");
-        if(date_from instanceof LocalDate) {
-            hql.append(" and i.date >= :date ");
+        if(dateFrom instanceof LocalDate) {
+            hql.append(" and i.date >= :dateFrom ");
         }
-        if(date_to instanceof LocalDate) {
-            hql.append(" and i.date <= :date ");
-        }
-        if(money instanceof Double) {
-            hql.append(" and i.money >= :money ");
+        if(dateTo instanceof LocalDate) {
+            hql.append(" and i.date <= :dateTo ");
         }
         if(category instanceof String) {
             hql.append(" and i.category = :category ");
         }
         if(paymentMethod instanceof PaymentMethodDto) {
-            hql.append(" and i.paymentMethod = :paymentMethod ");
+            hql.append(" and i.paymentMethod.id = :paymentMethodId ");
         }
 
         TypedQuery<Income> query = entityManager.createQuery(hql.toString(), Income.class);
         query.setParameter("userId", SEManager.getId());
-        if(date_from instanceof LocalDate d) {
-            query.setParameter("date_from", d);
+        if(dateFrom instanceof LocalDate d) {
+            query.setParameter("dateFrom", d);
         }
-        if(date_to instanceof LocalDate d) {
-            query.setParameter("date_to", d);
-        }
-        if(money instanceof Double m) {
-            query.setParameter("money", m);
+        if(dateTo instanceof LocalDate d) {
+            query.setParameter("dateTo", d);
         }
         if(category instanceof String c) {
             query.setParameter("category", c);
         }
         if(paymentMethod instanceof PaymentMethodDto pm) {
-            query.setParameter("paymentMethod", pm);
+            query.setParameter("paymentMethodId", pm.getId());
         }
 
         return query.getResultList();
     }
 
+    @Override
     public List<Income> retrieveByUser(Long id) {
-        return List.of();
+        StringBuilder hql = new StringBuilder("from Income i where 1=1 ");
+        hql.append("and i.userId = :userId ");
+
+        TypedQuery<Income> query = entityManager.createQuery(hql.toString(), Income.class);
+        query.setParameter("userId", id);
+
+        return query.getResultList();
     }
 }

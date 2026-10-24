@@ -2,7 +2,7 @@ package org.enrycoweiser.finance.backend.utils.filter;
 
 import org.enrycoweiser.finance.shared.api.request.IncomeRequest;
 import org.enrycoweiser.finance.shared.utils.FilterUtils;
-import java.math.BigDecimal;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,11 +19,7 @@ public class IncomeFilter {
         }
 
         if(request.getDateTo() != null) {
-            filterMap.put(FilterUtils.INCOME_DATE_TO, request.getDateFrom());
-        }
-
-        if(request.getMoney() != null && request.getMoney().compareTo(BigDecimal.ZERO) > 0) {
-            filterMap.put(FilterUtils.INCOME_MONEY, request.getMoney());
+            filterMap.put(FilterUtils.INCOME_DATE_TO, request.getDateTo());
         }
 
         if(request.getCategory() != null && !request.getCategory().isBlank()) {

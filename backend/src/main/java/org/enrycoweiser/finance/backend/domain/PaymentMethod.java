@@ -3,7 +3,6 @@ package org.enrycoweiser.finance.backend.domain;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import org.enrycoweiser.finance.backend.standard.StandardEntity;
 import org.enrycoweiser.finance.shared.dto.PaymentMethodDto;
@@ -31,6 +30,10 @@ public class PaymentMethod extends StandardEntity {
     }
 
     public PaymentMethod(PaymentMethodDto dto) {
+        if(dto == null) {
+            return;
+        }
+
         this.id = dto.getId();
         this.name = dto.getName();
         this.active = dto.getActive();

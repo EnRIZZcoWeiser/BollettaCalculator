@@ -7,6 +7,8 @@ public class ErrorUtils {
     public static final String API_002 = "Delete failed!";
     public static final String API_003_CODE = "API_003";
     public static final String API_003 = "Delete failed! Record not found!";
+    public static final String API_004_CODE = "API_004";
+    public static final String API_004 = "Save failed! Payment method required!";
 
     public static final String ERR_001_CODE = "ERR_001";
 

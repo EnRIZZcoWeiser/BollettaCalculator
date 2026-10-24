@@ -134,8 +134,8 @@ public class IncomeAlterDlg extends StandardAlterDlg {
         if(res == null) {
             NotificationHelper.showErrorMessage(NameUtils.INCOME + NotificationUtils.SAVE_FAILED);
             return;
-        } else if(res.getStatus().equals(StringUtils.RESPONSE_KO)) {
-            NotificationHelper.showErrorMessage(res.getError());
+        } else if(res.getStatus() != null && res.getStatus().equals(StringUtils.RESPONSE_KO)) {
+            NotificationHelper.showErrorMessage(res.getErrorCode() + " - " + res.getError());
             return;
         }
 
@@ -153,7 +153,7 @@ public class IncomeAlterDlg extends StandardAlterDlg {
             return NotificationUtils.DATE_REQUIRED;
         }
 
-        if(moneyTxt.getValue() == null || moneyTxt.getValue().signum() == 1) {
+        if(moneyTxt.getValue() == null || moneyTxt.getValue().signum() <= 0) {
             return NotificationUtils.MONEY_REQUIRED;
         }
 

@@ -20,14 +20,12 @@ import java.util.*;
 
 @Route(value = "/expense", layout = DashboardView.class)
 @PageTitle("Expense")
-public class ExpenseListView extends StandardListView<ExpenseDto,
-                                                        ExpenseAlterDlg,
-                                                        ExpenseFilterDlg> {
+public class ExpenseListView extends StandardListView<ExpenseDto> {
 
     protected Map<String, Object> filters;
 
     public ExpenseListView() {
-        super(ExpenseAlterDlg.class, ExpenseFilterDlg.class);
+        super();
 
         filters = new HashMap<>();
 
@@ -50,7 +48,6 @@ public class ExpenseListView extends StandardListView<ExpenseDto,
     }
 
     protected void delete() {
-        Set<ExpenseDto> items = grid.getSelectedItems();
 
         Long id = grid.getSelectedItems().iterator().next().getId();
 
@@ -107,6 +104,7 @@ public class ExpenseListView extends StandardListView<ExpenseDto,
             filters = filterDlg.getFilters();
             refreshBtn();
         });
+        filterDlg.open();
     }
 
     @Override
@@ -125,7 +123,6 @@ public class ExpenseListView extends StandardListView<ExpenseDto,
     protected Map<String, Object> createEditMap() {
         Map<String, Object> data = new HashMap<>();
 
-        Set<ExpenseDto> items = grid.getSelectedItems();
 
         ExpenseDto e = grid.getSelectedItems().iterator().next();
         data.put(FilterUtils.ID, e.getId());

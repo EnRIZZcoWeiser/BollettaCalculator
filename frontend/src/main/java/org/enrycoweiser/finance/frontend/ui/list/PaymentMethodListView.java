@@ -20,14 +20,12 @@ import java.util.*;
 
 @Route(value = "/paymentMethod", layout = DashboardView.class)
 @PageTitle("Payment Method")
-public class PaymentMethodListView extends StandardListView<PaymentMethodDto,
-                                                            PaymentMethodAlterDlg,
-                                                            PaymentMethodFilterDlg> {
+public class PaymentMethodListView extends StandardListView<PaymentMethodDto> {
 
     protected Map<String, Object> filters;
 
     public PaymentMethodListView() {
-        super(PaymentMethodAlterDlg.class, PaymentMethodFilterDlg.class);
+        super();
 
         filters = new HashMap<>();
 
@@ -51,7 +49,6 @@ public class PaymentMethodListView extends StandardListView<PaymentMethodDto,
     }
 
     protected void delete() {
-        Set<PaymentMethodDto> items = grid.getSelectedItems();
 
         Long id = grid.getSelectedItems().iterator().next().getId();
 

@@ -12,24 +12,12 @@ import org.enrycoweiser.finance.shared.standard.StandardDto;
 
 import java.util.Set;
 
-public abstract class StandardListView<E extends StandardDto,
-                                ALT extends StandardAlterDlg,
-                                FIL extends StandardFilterDlg> extends VerticalLayout {
+public abstract class StandardListView<E extends StandardDto> extends VerticalLayout {
 
     protected Grid<E> grid;
-    protected ALT alterDlg;
-    protected FIL filterDlg;
 
-    public StandardListView(Class<ALT> alterDlgClass, Class<FIL> filterDlgClass) {
+    public StandardListView() {
         grid = new Grid<>();
-
-        try {
-            alterDlg = alterDlgClass.getDeclaredConstructor().newInstance();
-            filterDlg = filterDlgClass.getDeclaredConstructor().newInstance();
-        } catch (Exception e) {
-            alterDlg = null;
-            filterDlg = null;
-        }
 
         add(
                 createContent()
@@ -96,7 +84,7 @@ public abstract class StandardListView<E extends StandardDto,
 
     protected Component createToolbarDeleteButton() {
         Button delete = new Button("Delete");
-        delete.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         delete.addClickListener(e -> deleteButtonClicked());
 
         return delete;

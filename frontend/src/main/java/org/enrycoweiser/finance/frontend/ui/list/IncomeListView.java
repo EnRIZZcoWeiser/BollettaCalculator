@@ -20,14 +20,12 @@ import java.util.*;
 
 @Route(value = "/income", layout = DashboardView.class)
 @PageTitle("Income")
-public class IncomeListView extends StandardListView<IncomeDto,
-                                                        IncomeAlterDlg,
-                                                        IncomeFilterDlg> {
+public class IncomeListView extends StandardListView<IncomeDto> {
 
     protected Map<String, Object> filters;
 
     public IncomeListView() {
-        super(IncomeAlterDlg.class, IncomeFilterDlg.class);
+        super();
 
         filters = new HashMap<>();
 
@@ -51,7 +49,6 @@ public class IncomeListView extends StandardListView<IncomeDto,
     }
 
     protected void delete() {
-        Set<IncomeDto> items = grid.getSelectedItems();
 
         Long id = grid.getSelectedItems().iterator().next().getId();
 
@@ -125,7 +122,6 @@ public class IncomeListView extends StandardListView<IncomeDto,
     protected Map<String, Object> createEditMap() {
         Map<String, Object> data = new HashMap<>();
 
-        Set<IncomeDto> items = grid.getSelectedItems();
 
         IncomeDto i = grid.getSelectedItems().iterator().next();
         data.put(FilterUtils.ID, i.getId());

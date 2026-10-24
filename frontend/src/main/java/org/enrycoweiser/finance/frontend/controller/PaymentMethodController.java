@@ -45,6 +45,10 @@ public class PaymentMethodController {
             req.setActive(b);
         }
 
+        if(data.get(FilterUtils.PAYMENT_METHOD_ONLY_ACTIVE) instanceof Boolean b) {
+            req.setActive(b);
+        }
+
         return req;
     }
 

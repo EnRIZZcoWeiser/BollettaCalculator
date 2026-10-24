@@ -92,7 +92,7 @@ public class IncomeFilterDlg extends StandardFilterDlg {
 
     protected void valueCategoryCombo() {
         categoryCmb.setItems(
-                StaticUtils.EXPENSE_CATEGORIES
+                StaticUtils.INCOME_CATEGORIES
         );
     }
 
@@ -105,15 +105,15 @@ public class IncomeFilterDlg extends StandardFilterDlg {
     }
 
     protected void valueFields() {
-        if(filters.get(FilterUtils.EXPENSE_DATE_FROM) instanceof LocalDate d) {
+        if(filters.get(FilterUtils.INCOME_DATE_FROM) instanceof LocalDate d) {
             dateFromTxt.setValue(d);
         }
 
-        if(filters.get(FilterUtils.EXPENSE_DATE_TO) instanceof LocalDate d) {
+        if(filters.get(FilterUtils.INCOME_DATE_TO) instanceof LocalDate d) {
             dateToTxt.setValue(d);
         }
 
-        if(filters.get(FilterUtils.EXPENSE_CATEGORY) instanceof String s) {
+        if(filters.get(FilterUtils.INCOME_CATEGORY) instanceof String s) {
             categoryCmb.setValue(s);
         }
 

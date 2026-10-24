@@ -19,7 +19,7 @@ public class PaymentMethodFilter {
         }
 
         if(request.getActive() != null) {
-            filterMap.put(FilterUtils.PAYMENT_METHOD_ACTIVE, request.getActive());
+            filterMap.put(FilterUtils.PAYMENT_METHOD_ONLY_ACTIVE, request.getActive());
         }
 
         return filterMap;

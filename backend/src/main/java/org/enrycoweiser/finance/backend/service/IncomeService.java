@@ -36,7 +36,7 @@ public class IncomeService implements EntityService<IncomeDto,
         try {
             income = incomeRepository.retrieveById(request.getId());
         } catch (Exception ex) {
-            incomeResponse.createErrorResponse(ErrorUtils.ERR_001_CODE, ex.getMessage());
+            incomeResponse.createErrorResponse(ex.getMessage(), ErrorUtils.ERR_001_CODE);
             return incomeResponse;
         }
 
@@ -50,6 +50,10 @@ public class IncomeService implements EntityService<IncomeDto,
         i.setDate(request.getDate());
         i.setMoney(request.getMoney());
         i.setCategory(request.getCategory());
+        if(request.getPaymentMethod() == null) {
+            incomeResponse.createErrorResponse(ErrorUtils.API_004, ErrorUtils.API_004_CODE);
+            return incomeResponse;
+        }
         i.setPaymentMethod(new PaymentMethod(request.getPaymentMethod()));
         i.setNote(request.getNote());
 
@@ -74,7 +78,7 @@ public class IncomeService implements EntityService<IncomeDto,
         try {
             income = incomeRepository.retrieveById(request.getId());
         } catch (Exception ex) {
-            incomeResponse.createErrorResponse(ErrorUtils.ERR_001_CODE, ex.getMessage());
+            incomeResponse.createErrorResponse(ex.getMessage(), ErrorUtils.ERR_001_CODE);
             return incomeResponse;
         }
 
@@ -112,7 +116,7 @@ public class IncomeService implements EntityService<IncomeDto,
 
             incomeResponse = new IncomeResponse(dtos);
         } catch (Exception ex) {
-            incomeResponse.createErrorResponse("", "");
+            incomeResponse.createErrorResponse(ex.getMessage(), ErrorUtils.EXC_001);
             return incomeResponse;
         }
 

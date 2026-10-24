@@ -17,20 +17,21 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "income")
 public class Income extends StandardEntity {
-    private LocalDate date;
-    private BigDecimal money;
-    private String category;
+    protected LocalDate date;
+    protected BigDecimal money;
+    protected String category;
 
     @ManyToOne
     @JoinColumn(name = "id_payment_method")
-    private PaymentMethod paymentMethod;
+    protected PaymentMethod paymentMethod;
 
-    private String note;
-    private Long userId;
+    protected String note;
+    protected Long userId;
 
     public IncomeDto toDto() {
         IncomeDto dto = new IncomeDto();
         dto.setId(id);
+        dto.setDate(date);
         dto.setMoney(money);
         dto.setCategory(category);
         if(paymentMethod != null) {

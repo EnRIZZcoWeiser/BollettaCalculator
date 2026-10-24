@@ -37,7 +37,7 @@ public class ExpenseService implements EntityService<ExpenseDto,
         try {
             expense = expenseRepository.retrieveById(request.getId());
         } catch (Exception ex) {
-            expenseResponse.createErrorResponse(ErrorUtils.ERR_001_CODE, ex.getMessage());
+            expenseResponse.createErrorResponse(ex.getMessage(), ErrorUtils.ERR_001_CODE);
             return expenseResponse;
         }
 
@@ -53,6 +53,10 @@ public class ExpenseService implements EntityService<ExpenseDto,
         e.setLocation(request.getLocation());
         e.setStore(request.getStore());
         e.setCategory(request.getCategory());
+        if(request.getPaymentMethod() == null) {
+            expenseResponse.createErrorResponse(ErrorUtils.API_004, ErrorUtils.API_004_CODE);
+            return expenseResponse;
+        }
         e.setPaymentMethod(new PaymentMethod(request.getPaymentMethod()));
         e.setNote(request.getNote());
 
@@ -77,7 +81,7 @@ public class ExpenseService implements EntityService<ExpenseDto,
         try {
             expense = expenseRepository.retrieveById(request.getId());
         } catch (Exception ex) {
-            expenseResponse.createErrorResponse(ErrorUtils.ERR_001_CODE, ex.getMessage());
+            expenseResponse.createErrorResponse(ex.getMessage(), ErrorUtils.ERR_001_CODE);
             return expenseResponse;
         }
 
@@ -114,8 +118,8 @@ public class ExpenseService implements EntityService<ExpenseDto,
             }
 
             expenseResponse = new ExpenseResponse(dtos);
-        } catch (Exception e) {
-            expenseResponse.createErrorResponse("", "");
+        } catch (Exception ex) {
+            expenseResponse.createErrorResponse(ex.getMessage(), ErrorUtils.EXC_001);
             return expenseResponse;
         }
 

@@ -83,8 +83,8 @@ public class PaymentMethodAlterDlg extends StandardAlterDlg {
         if(res == null) {
             NotificationHelper.showErrorMessage(NameUtils.PAYMENT_METHOD + NotificationUtils.SAVE_FAILED);
             return;
-        } else if(res.getStatus().equals(StringUtils.RESPONSE_KO)) {
-            NotificationHelper.showErrorMessage(res.getError());
+        } else if(res.getStatus() != null && res.getStatus().equals(StringUtils.RESPONSE_KO)) {
+            NotificationHelper.showErrorMessage(res.getErrorCode() + " - " + res.getError());
             return;
         }
 

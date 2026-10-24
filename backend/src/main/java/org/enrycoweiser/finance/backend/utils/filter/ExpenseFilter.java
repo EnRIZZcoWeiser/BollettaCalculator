@@ -2,7 +2,7 @@ package org.enrycoweiser.finance.backend.utils.filter;
 
 import org.enrycoweiser.finance.shared.api.request.ExpenseRequest;
 import org.enrycoweiser.finance.shared.utils.FilterUtils;
-import java.math.BigDecimal;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,10 +20,6 @@ public class ExpenseFilter {
 
         if(request.getDateTo() != null) {
             filterMap.put(FilterUtils.EXPENSE_DATE_TO, request.getDateTo());
-        }
-
-        if(request.getMoney() != null && request.getMoney().compareTo(BigDecimal.ZERO) > 0) {
-            filterMap.put(FilterUtils.EXPENSE_MONEY, request.getMoney());
         }
 
         if(request.getLocation() != null && !request.getLocation().isBlank()) {

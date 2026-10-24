@@ -53,7 +53,7 @@ public class ExpenseAlterDlg extends StandardAlterDlg {
 
     protected void valueCategoryCombo() {
         categoryCmb.setItems(
-                StaticUtils.INCOME_CATEGORIES
+                StaticUtils.EXPENSE_CATEGORIES
         );
     }
 
@@ -149,8 +149,8 @@ public class ExpenseAlterDlg extends StandardAlterDlg {
         if(res == null) {
             NotificationHelper.showErrorMessage(NameUtils.EXPENSE + NotificationUtils.SAVE_FAILED);
             return;
-        } else if(res.getStatus().equals(StringUtils.RESPONSE_KO)) {
-            NotificationHelper.showErrorMessage(res.getError());
+        } else if(res.getStatus() != null && res.getStatus().equals(StringUtils.RESPONSE_KO)) {
+            NotificationHelper.showErrorMessage(res.getErrorCode() + " - " + res.getError());
             return;
         }
 

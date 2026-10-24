@@ -1,12 +1,11 @@
 package org.enrycoweiser.finance.frontend.base;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 
 public abstract class StandardFilterDlg extends Dialog {
-
-    protected boolean isConfirm;
 
     public StandardFilterDlg(String title) {
         this.setHeaderTitle(title);
@@ -22,18 +21,18 @@ public abstract class StandardFilterDlg extends Dialog {
 
     private void setFooterButtons(StandardFilterDlg standardFilterDlg) {
         Button confirmButton = new Button("Confirm");
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Button cancelButton = new Button("Cancel");
+        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
         confirmButton.addClickListener(event -> {
-            isConfirm = true;
             confirmButtonClicked();
         });
         cancelButton.addClickListener(event -> {
-            isConfirm = false;
             this.close();
         });
 
-        this.getFooter().add(confirmButton, cancelButton);
+        this.getFooter().add(cancelButton, confirmButton);
     }
 
     protected abstract void confirmButtonClicked();

@@ -41,7 +41,14 @@ public class PaymentMethodRepositoryImpl implements PaymentMethodRepositoryExt {
         return query.getResultList();
     }
 
+    @Override
     public List<PaymentMethod> retrieveByUser(Long id) {
-        return List.of();
+        StringBuilder hql = new StringBuilder("from PaymentMethod p where 1=1 ");
+        hql.append("and p.userId = :userId ");
+
+        TypedQuery<PaymentMethod> query = entityManager.createQuery(hql.toString(), PaymentMethod.class);
+        query.setParameter("userId", id);
+
+        return query.getResultList();
     }
 }

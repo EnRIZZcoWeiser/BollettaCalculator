@@ -36,7 +36,7 @@ public class PaymentMethodService implements EntityService<PaymentMethodDto,
         try {
             paymentMethod = paymentMethodRepository.retrieveById(request.getId());
         } catch (Exception ex) {
-            pmResponse.createErrorResponse(ErrorUtils.ERR_001_CODE, ex.getMessage());
+            pmResponse.createErrorResponse(ex.getMessage(), ErrorUtils.ERR_001_CODE);
             return pmResponse;
         }
 
@@ -71,7 +71,7 @@ public class PaymentMethodService implements EntityService<PaymentMethodDto,
         try {
             paymentMethod = paymentMethodRepository.retrieveById(request.getId());
         } catch (Exception ex) {
-            pmResponse.createErrorResponse(ErrorUtils.ERR_001_CODE, ex.getMessage());
+            pmResponse.createErrorResponse(ex.getMessage(), ErrorUtils.ERR_001_CODE);
             return pmResponse;
         }
 
