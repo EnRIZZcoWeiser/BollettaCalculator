@@ -32,7 +32,7 @@ public class DeleteConfirmDlg extends Dialog {
         Button goBackBtn = new Button("Go Back");
         goBackBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         Button deleteBtn = new Button("Delete");
-        deleteBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        deleteBtn.addThemeVariants(ButtonVariant.AURA_DANGER);
 
         goBackBtn.addClickListener(event -> {
             goBack();

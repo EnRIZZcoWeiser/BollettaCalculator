@@ -4,13 +4,16 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.enrycoweiser.finance.frontend.base.DeleteConfirmDlg;
 import org.enrycoweiser.finance.frontend.base.StandardListView;
+import org.enrycoweiser.finance.frontend.controller.GetterController;
 import org.enrycoweiser.finance.frontend.controller.IncomeController;
 import org.enrycoweiser.finance.frontend.ui.DashboardView;
 import org.enrycoweiser.finance.frontend.ui.dialog.alter.IncomeAlterDlg;
 import org.enrycoweiser.finance.frontend.ui.dialog.filter.IncomeFilterDlg;
 import org.enrycoweiser.finance.frontend.utils.NotificationHelper;
 import org.enrycoweiser.finance.shared.api.response.IncomeResponse;
+import org.enrycoweiser.finance.shared.api.response.PaymentMethodResponse;
 import org.enrycoweiser.finance.shared.dto.IncomeDto;
+import org.enrycoweiser.finance.shared.dto.PaymentMethodDto;
 import org.enrycoweiser.finance.shared.utils.FilterUtils;
 import org.enrycoweiser.finance.shared.utils.NameUtils;
 import org.enrycoweiser.finance.shared.utils.NotificationUtils;
@@ -23,18 +26,40 @@ import java.util.*;
 public class IncomeListView extends StandardListView<IncomeDto> {
 
     protected Map<String, Object> filters;
+    protected List<PaymentMethodDto> paymentMethods;
 
     public IncomeListView() {
         super();
 
         filters = new HashMap<>();
+        paymentMethods = new ArrayList<>();
+
+        loadPaymentMethods();
 
         refreshBtn();
     }
 
+    protected void loadPaymentMethods() {
+        PaymentMethodResponse response = GetterController.callGetAllPaymentMethodsAPI();
+        if(response == null) {
+            NotificationHelper.showErrorMessage(NameUtils.PAYMENT_METHOD + NotificationUtils.RETRIEVE_FAILED);
+            return;
+        } else if(response.getStatus() != null && response.getStatus().equals(StringUtils.RESPONSE_KO)) {
+            NotificationHelper.showErrorMessage(response.getErrorCode() + " - " + response.getError());
+            return;
+        }
+
+        List<PaymentMethodDto> methods = response.getItems();
+        if(methods == null) {
+            methods = new ArrayList<>();
+        }
+
+        paymentMethods = methods;
+    }
+
     @Override
     protected void addBtn() {
-        IncomeAlterDlg alterDlg = new IncomeAlterDlg(NameUtils.INCOME, null, true);
+        IncomeAlterDlg alterDlg = new IncomeAlterDlg(NameUtils.INCOME, null, true, paymentMethods);
         alterDlg.setOnConfirm(this::refreshBtn);
 
         alterDlg.open();
@@ -49,7 +74,6 @@ public class IncomeListView extends StandardListView<IncomeDto> {
     }
 
     protected void delete() {
-
         Long id = grid.getSelectedItems().iterator().next().getId();
 
         IncomeResponse response = IncomeController.callDeleteAPI(id);
@@ -92,7 +116,7 @@ public class IncomeListView extends StandardListView<IncomeDto> {
             return;
         }
 
-        IncomeAlterDlg alterDlg = new IncomeAlterDlg(NameUtils.INCOME, data, false);
+        IncomeAlterDlg alterDlg = new IncomeAlterDlg(NameUtils.INCOME, data, false, paymentMethods);
         alterDlg.setOnConfirm(this::refreshBtn);
 
         alterDlg.open();
@@ -100,7 +124,7 @@ public class IncomeListView extends StandardListView<IncomeDto> {
 
     @Override
     protected void filterBtn() {
-        IncomeFilterDlg filterDlg = new IncomeFilterDlg(NameUtils.INCOME, filters);
+        IncomeFilterDlg filterDlg = new IncomeFilterDlg(NameUtils.INCOME, filters, paymentMethods);
         filterDlg.setOnConfirm(()  -> {
             filters = filterDlg.getFilters();
             refreshBtn();

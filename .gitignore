@@ -36,3 +36,4 @@ shared/target/maven-archiver/pom.properties
 /frontend/.idea
 /.idea
 backend/src/main/resources/application-DEV.properties
+.claude/launch.json

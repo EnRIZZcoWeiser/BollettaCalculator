@@ -1,6 +1,7 @@
 package org.enrycoweiser.finance.frontend.ui.dialog.alter;
 
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.combobox.PartialMatchMode;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.textfield.BigDecimalField;
@@ -16,8 +17,8 @@ import org.enrycoweiser.finance.shared.utils.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -31,13 +32,15 @@ public class IncomeAlterDlg extends StandardAlterDlg {
 
     protected boolean newItem;
     protected Long idDto;
+    protected List<PaymentMethodDto> paymentMethods;
 
     protected Runnable onConfirm;
 
-    public IncomeAlterDlg(String title, Map<String, Object> values, boolean newItem) {
+    public IncomeAlterDlg(String title, Map<String, Object> values, boolean newItem, List<PaymentMethodDto> paymentMethods) {
         super(title);
 
         this.newItem = newItem;
+        this.paymentMethods = paymentMethods;
 
         valueComboBoxes();
         setFields(values);
@@ -53,13 +56,14 @@ public class IncomeAlterDlg extends StandardAlterDlg {
         categoryCmb.setItems(
                 StaticUtils.INCOME_CATEGORIES
         );
+        categoryCmb.setPartialMatchMode(PartialMatchMode.FIRST_MATCH);
     }
 
     protected void valuePaymentMethodCombo() {
-        // TODO - don't know how to retrieve data rn
         paymentMethodCmb.setItems(
-                new ArrayList<>()
+                paymentMethods
         );
+        paymentMethodCmb.setPartialMatchMode(PartialMatchMode.FIRST_MATCH);
     }
 
     protected void setFields(Map<String, Object> values) {

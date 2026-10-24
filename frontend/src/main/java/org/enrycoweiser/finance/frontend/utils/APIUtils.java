@@ -8,6 +8,7 @@ public class APIUtils {
     public static final String BASE_URL = IP + ":" + PORT + PATH;
 
     public static final String ENTITY = "/entity";
+    public static final String LIST = "/list";
 
     public static final String SAVE = "/save";
     public static final String DELETE = "/delete";
@@ -26,4 +27,6 @@ public class APIUtils {
     public static final String API_ENTITY_PAYMENT_METHOD_SAVE = BASE_URL + ENTITY + PAYMENT_METHOD + SAVE;
     public static final String API_ENTITY_PAYMENT_METHOD_DELETE = BASE_URL + ENTITY + PAYMENT_METHOD + DELETE;
     public static final String API_ENTITY_PAYMENT_METHOD_REFRESH = BASE_URL + ENTITY + PAYMENT_METHOD + REFRESH;
+
+    public static final String API_LIST_PAYMENT_METHOD = BASE_URL + LIST + PAYMENT_METHOD;
 }

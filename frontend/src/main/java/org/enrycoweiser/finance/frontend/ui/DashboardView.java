@@ -1,10 +1,16 @@
 package org.enrycoweiser.finance.frontend.ui;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
-import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.sidenav.SideNav;
+import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.Route;
+import org.enrycoweiser.finance.frontend.ui.list.ExpenseListView;
+import org.enrycoweiser.finance.frontend.ui.list.IncomeListView;
+import org.enrycoweiser.finance.frontend.ui.list.PaymentMethodListView;
 import org.enrycoweiser.finance.shared.utils.NameUtils;
 
 @Route("")
@@ -14,48 +20,49 @@ public class DashboardView extends AppLayout {
     }
 
     protected void createLayout() {
+        createNavbar();
         createDrawer();
     }
 
+    protected void createNavbar() {
+        DrawerToggle toggle = new DrawerToggle();
+
+        addToNavbar(
+                toggle,
+                createTitle()
+        );
+    }
+
+    protected Component createTitle() {
+        H1 title = new H1(NameUtils.APP_NAME);
+        title.getStyle()
+                .set("font-size", "1.25rem")
+                .set("margin", "0");
+
+        return title;
+    }
+
     protected void createDrawer() {
-        VerticalLayout drawer = new VerticalLayout();
+        SideNav nav = new SideNav();
 
-        Button expenseBtn = createExpenseButton();
-        expenseBtn.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("/expense")));
-
-        Button incomeBtn = createIncomeButton();
-        incomeBtn.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("/income")));
-
-        Button paymentMethodBtn = createPaymentMethodButton();
-        paymentMethodBtn.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("/paymentMethod")));
-
-        drawer.add(
-                expenseBtn,
-                incomeBtn,
-                paymentMethodBtn
+        nav.addItem(
+                createExpenseItem(),
+                createIncomeItem(),
+                createPaymentMethodItem()
         );
 
-        addToDrawer(drawer);
+        addToDrawer(nav);
     }
 
-    protected Button createExpenseButton() {
-        Button btn = new Button(NameUtils.EXPENSE, VaadinIcon.MONEY.create());
-        btn.setWidthFull();
-
-        return btn;
+    protected SideNavItem createExpenseItem() {
+        return new SideNavItem(NameUtils.EXPENSE, ExpenseListView.class, VaadinIcon.MONEY.create());
     }
 
-    protected Button createIncomeButton() {
-        Button btn = new Button(NameUtils.INCOME, VaadinIcon.TRENDING_UP.create());
-        btn.setWidthFull();
-
-        return btn;
+    protected SideNavItem createIncomeItem() {
+        return new SideNavItem(NameUtils.INCOME, IncomeListView.class, VaadinIcon.TRENDING_UP.create());
     }
 
-    protected Button createPaymentMethodButton() {
-        Button btn = new Button(NameUtils.PAYMENT_METHOD, VaadinIcon.CREDIT_CARD.create());
-        btn.setWidthFull();
-
-        return btn;
+    protected SideNavItem createPaymentMethodItem() {
+        return new SideNavItem(NameUtils.PAYMENT_METHOD, PaymentMethodListView.class, VaadinIcon.CREDIT_CARD.create());
     }
 }

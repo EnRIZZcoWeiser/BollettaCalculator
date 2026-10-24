@@ -1,6 +1,9 @@
 package org.enrycoweiser.finance.shared.utils;
 
 public class NameUtils {
+    /* APP */
+    public static final String APP_NAME = "Bolletta Calculator";
+
     /* ENTITIES */
     public static final String EXPENSE = "Expense";
     public static final String INCOME = "Income";

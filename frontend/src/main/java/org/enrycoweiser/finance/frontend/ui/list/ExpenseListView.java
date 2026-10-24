@@ -5,12 +5,15 @@ import com.vaadin.flow.router.Route;
 import org.enrycoweiser.finance.frontend.base.DeleteConfirmDlg;
 import org.enrycoweiser.finance.frontend.base.StandardListView;
 import org.enrycoweiser.finance.frontend.controller.ExpenseController;
+import org.enrycoweiser.finance.frontend.controller.GetterController;
 import org.enrycoweiser.finance.frontend.ui.DashboardView;
 import org.enrycoweiser.finance.frontend.ui.dialog.alter.ExpenseAlterDlg;
 import org.enrycoweiser.finance.frontend.ui.dialog.filter.ExpenseFilterDlg;
 import org.enrycoweiser.finance.frontend.utils.NotificationHelper;
 import org.enrycoweiser.finance.shared.api.response.ExpenseResponse;
+import org.enrycoweiser.finance.shared.api.response.PaymentMethodResponse;
 import org.enrycoweiser.finance.shared.dto.ExpenseDto;
+import org.enrycoweiser.finance.shared.dto.PaymentMethodDto;
 import org.enrycoweiser.finance.shared.utils.FilterUtils;
 import org.enrycoweiser.finance.shared.utils.NameUtils;
 import org.enrycoweiser.finance.shared.utils.NotificationUtils;
@@ -23,18 +26,40 @@ import java.util.*;
 public class ExpenseListView extends StandardListView<ExpenseDto> {
 
     protected Map<String, Object> filters;
+    protected List<PaymentMethodDto> paymentMethods;
 
     public ExpenseListView() {
         super();
 
         filters = new HashMap<>();
+        paymentMethods = new ArrayList<>();
+
+        loadPaymentMethods();
 
         refreshBtn();
     }
 
+    protected void loadPaymentMethods() {
+        PaymentMethodResponse response = GetterController.callGetAllPaymentMethodsAPI();
+        if(response == null) {
+            NotificationHelper.showErrorMessage(NameUtils.PAYMENT_METHOD + NotificationUtils.RETRIEVE_FAILED);
+            return;
+        } else if(response.getStatus() != null && response.getStatus().equals(StringUtils.RESPONSE_KO)) {
+            NotificationHelper.showErrorMessage(response.getErrorCode() + " - " + response.getError());
+            return;
+        }
+
+        List<PaymentMethodDto> methods = response.getItems();
+        if(methods == null) {
+            methods = new ArrayList<>();
+        }
+
+        paymentMethods = methods;
+    }
+
     @Override
     protected void addBtn() {
-        ExpenseAlterDlg alterDlg = new ExpenseAlterDlg(NameUtils.EXPENSE, null, true);
+        ExpenseAlterDlg alterDlg = new ExpenseAlterDlg(NameUtils.EXPENSE, null, true, paymentMethods);
         alterDlg.setOnConfirm(this::refreshBtn);
 
         alterDlg.open();
@@ -48,7 +73,6 @@ public class ExpenseListView extends StandardListView<ExpenseDto> {
     }
 
     protected void delete() {
-
         Long id = grid.getSelectedItems().iterator().next().getId();
 
         ExpenseResponse response = ExpenseController.callDeleteAPI(id);
@@ -91,7 +115,7 @@ public class ExpenseListView extends StandardListView<ExpenseDto> {
             return;
         }
 
-        ExpenseAlterDlg alterDlg = new ExpenseAlterDlg(NameUtils.EXPENSE, data, false);
+        ExpenseAlterDlg alterDlg = new ExpenseAlterDlg(NameUtils.EXPENSE, data, false, paymentMethods);
         alterDlg.setOnConfirm(this::refreshBtn);
 
         alterDlg.open();
@@ -99,7 +123,7 @@ public class ExpenseListView extends StandardListView<ExpenseDto> {
 
     @Override
     protected void filterBtn() {
-        ExpenseFilterDlg filterDlg = new ExpenseFilterDlg(NameUtils.EXPENSE, filters);
+        ExpenseFilterDlg filterDlg = new ExpenseFilterDlg(NameUtils.EXPENSE, filters, paymentMethods);
         filterDlg.setOnConfirm(() -> {
             filters = filterDlg.getFilters();
             refreshBtn();

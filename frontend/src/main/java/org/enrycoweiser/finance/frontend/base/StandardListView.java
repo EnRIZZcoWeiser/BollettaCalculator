@@ -5,6 +5,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.enrycoweiser.finance.frontend.utils.NotificationHelper;
@@ -18,6 +19,7 @@ public abstract class StandardListView<E extends StandardDto> extends VerticalLa
 
     public StandardListView() {
         grid = new Grid<>();
+        grid.setSelectionMode(Grid.SelectionMode.MULTI);
 
         add(
                 createContent()
@@ -59,18 +61,20 @@ public abstract class StandardListView<E extends StandardDto> extends VerticalLa
 
         toolbar.add(
                 createToolbarAddButton(),
-                createToolbarDeleteButton(),
-                createToolbarRefreshButton(),
                 createToolbarEditButton(),
-                createToolbarFilterButton()
+                createToolbarRefreshButton(),
+                createToolbarFilterButton(),
+                createToolbarDeleteButton()
         );
 
         return toolbar;
     }
 
     protected Component createToolbarAddButton() {
-        Button add = new Button("Add");
-        add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        Button add = new Button(VaadinIcon.PLUS.create());
+        add.setTooltipText("Add");
+        add.setAriaLabel("Add");
+        add.addThemeVariants(ButtonVariant.PRIMARY);
         add.addClickListener(e -> addButtonClicked());
 
         return add;
@@ -83,8 +87,10 @@ public abstract class StandardListView<E extends StandardDto> extends VerticalLa
     protected abstract void addBtn();
 
     protected Component createToolbarDeleteButton() {
-        Button delete = new Button("Delete");
-        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        Button delete = new Button(VaadinIcon.TRASH.create());
+        delete.setTooltipText("Delete");
+        delete.setAriaLabel("Delete");
+        delete.addThemeVariants(ButtonVariant.ERROR);
         delete.addClickListener(e -> deleteButtonClicked());
 
         return delete;
@@ -109,8 +115,10 @@ public abstract class StandardListView<E extends StandardDto> extends VerticalLa
     protected abstract void deleteBtn();
 
     protected Component createToolbarRefreshButton() {
-        Button refresh = new Button("Refresh");
-        refresh.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        Button refresh = new Button(VaadinIcon.REFRESH.create());
+        refresh.setTooltipText("Refresh");
+        refresh.setAriaLabel("Refresh");
+        refresh.addThemeVariants(ButtonVariant.PRIMARY);
         refresh.addClickListener(e -> refreshButtonClicked());
 
         return refresh;
@@ -123,8 +131,10 @@ public abstract class StandardListView<E extends StandardDto> extends VerticalLa
     protected abstract void refreshBtn();
 
     protected Component createToolbarEditButton() {
-        Button edit = new Button("Edit");
-        edit.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        Button edit = new Button(VaadinIcon.EDIT.create());
+        edit.setTooltipText("Edit");
+        edit.setAriaLabel("Edit");
+        edit.addThemeVariants(ButtonVariant.PRIMARY);
         edit.addClickListener(e -> editButtonClicked());
 
         return edit;
@@ -149,8 +159,10 @@ public abstract class StandardListView<E extends StandardDto> extends VerticalLa
     protected abstract void editBtn();
 
     protected Component createToolbarFilterButton() {
-        Button filter = new Button("Filter");
-        filter.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        Button filter = new Button(VaadinIcon.FILTER.create());
+        filter.setTooltipText("Filter");
+        filter.setAriaLabel("Filter");
+        filter.addThemeVariants(ButtonVariant.PRIMARY);
         filter.addClickListener(e -> filterButtonClicked());
 
         return filter;

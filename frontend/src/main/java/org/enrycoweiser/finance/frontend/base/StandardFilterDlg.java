@@ -10,7 +10,7 @@ public abstract class StandardFilterDlg extends Dialog {
     public StandardFilterDlg(String title) {
         this.setHeaderTitle(title);
 
-        setFooterButtons(this);
+        setFooterButtons();
 
         add(
                 createLayout()
@@ -19,7 +19,7 @@ public abstract class StandardFilterDlg extends Dialog {
 
     protected abstract FormLayout createLayout();
 
-    private void setFooterButtons(StandardFilterDlg standardFilterDlg) {
+    private void setFooterButtons() {
         Button confirmButton = new Button("Confirm");
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Button cancelButton = new Button("Cancel");

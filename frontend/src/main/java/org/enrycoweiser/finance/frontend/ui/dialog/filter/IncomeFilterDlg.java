@@ -12,13 +12,14 @@ import org.enrycoweiser.finance.shared.utils.NameUtils;
 import org.enrycoweiser.finance.shared.utils.StaticUtils;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Getter
 @Setter
 public class IncomeFilterDlg extends StandardFilterDlg {
     Map<String, Object> filters;
+    protected List<PaymentMethodDto> paymentMethods;
 
     protected DatePicker dateFromTxt;
     protected DatePicker dateToTxt;
@@ -27,10 +28,11 @@ public class IncomeFilterDlg extends StandardFilterDlg {
 
     protected Runnable onConfirm;
 
-    public IncomeFilterDlg(String title, Map<String, Object> values) {
+    public IncomeFilterDlg(String title, Map<String, Object> values, List<PaymentMethodDto> paymentMethods) {
         super(title);
 
         this.filters = values;
+        this.paymentMethods = paymentMethods;
 
         valueComboBoxes();
         valueFields();
@@ -83,6 +85,11 @@ public class IncomeFilterDlg extends StandardFilterDlg {
         if(category != null && !category.isBlank()) {
             filters.put(FilterUtils.INCOME_CATEGORY, category);
         }
+
+        PaymentMethodDto paymentMethod = paymentMethodCmb.getValue();
+        if(paymentMethod != null) {
+            filters.put(FilterUtils.INCOME_PAYMENT_METHOD, paymentMethod);
+        }
     }
 
     protected void valueComboBoxes() {
@@ -97,10 +104,9 @@ public class IncomeFilterDlg extends StandardFilterDlg {
     }
 
     protected void valuePaymentMethodCombo() {
-        // ON HOLD - Not Available on version 1.0.0
         paymentMethodCmb.clear();
         paymentMethodCmb.setItems(
-                new ArrayList<>()
+                paymentMethods
         );
     }
 
@@ -117,6 +123,8 @@ public class IncomeFilterDlg extends StandardFilterDlg {
             categoryCmb.setValue(s);
         }
 
-        paymentMethodCmb.setValue(null);
+        if(filters.get(FilterUtils.INCOME_PAYMENT_METHOD) instanceof PaymentMethodDto p) {
+            paymentMethodCmb.setValue(p);
+        }
     }
 }

@@ -13,15 +13,14 @@ import org.enrycoweiser.finance.shared.utils.NameUtils;
 import org.enrycoweiser.finance.shared.utils.StaticUtils;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Getter
 @Setter
 public class ExpenseFilterDlg extends StandardFilterDlg {
     Map<String, Object> filters;
+    protected List<PaymentMethodDto> paymentMethods;
 
     protected DatePicker dateFromTxt;
     protected DatePicker dateToTxt;
@@ -32,10 +31,11 @@ public class ExpenseFilterDlg extends StandardFilterDlg {
 
     protected Runnable onConfirm;
 
-    public ExpenseFilterDlg(String title, Map<String, Object> values) {
+    public ExpenseFilterDlg(String title, Map<String, Object> values, List<PaymentMethodDto> paymentMethods) {
         super(title);
 
         this.filters = values;
+        this.paymentMethods = paymentMethods;
 
         valueComboBoxes();
         valueFields();
@@ -102,6 +102,11 @@ public class ExpenseFilterDlg extends StandardFilterDlg {
         if(store != null && !store.isBlank()) {
             filters.put(FilterUtils.EXPENSE_STORE, store);
         }
+
+        PaymentMethodDto paymentMethod = paymentMethodCmb.getValue();
+        if(paymentMethod != null) {
+            filters.put(FilterUtils.EXPENSE_PAYMENT_METHOD, paymentMethod);
+        }
     }
 
     protected void valueComboBoxes() {
@@ -116,10 +121,9 @@ public class ExpenseFilterDlg extends StandardFilterDlg {
     }
 
     protected void valuePaymentMethodCombo() {
-        // ON HOLD - Not Available on version 1.0.0
         paymentMethodCmb.clear();
         paymentMethodCmb.setItems(
-                new ArrayList<>()
+                paymentMethods
         );
     }
 
@@ -144,6 +148,8 @@ public class ExpenseFilterDlg extends StandardFilterDlg {
             storeTxt.setValue(s);
         }
 
-        paymentMethodCmb.setValue(null);
+        if(filters.get(FilterUtils.EXPENSE_PAYMENT_METHOD) instanceof PaymentMethodDto p) {
+            paymentMethodCmb.setValue(p);
+        }
     }
 }

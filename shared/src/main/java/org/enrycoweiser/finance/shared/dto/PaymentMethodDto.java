@@ -10,4 +10,9 @@ public class PaymentMethodDto extends StandardDto {
     protected String name;
     protected Boolean active;
     protected Long userId;
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

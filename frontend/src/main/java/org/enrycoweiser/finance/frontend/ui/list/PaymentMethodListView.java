@@ -49,7 +49,6 @@ public class PaymentMethodListView extends StandardListView<PaymentMethodDto> {
     }
 
     protected void delete() {
-
         Long id = grid.getSelectedItems().iterator().next().getId();
 
         PaymentMethodResponse response = PaymentMethodController.callDeleteAPI(id);
