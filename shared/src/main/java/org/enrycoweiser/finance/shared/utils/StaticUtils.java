@@ -36,4 +36,17 @@ public class StaticUtils {
             INCOME_REFUNDS,
             INCOME_OTHER
     );
+
+    public static final String NET_WORTH_LIQUIDITY = "LIQUIDITY";
+    public static final String NET_WORTH_ETF = "ETF";
+    public static final String NET_WORTH_STOCK = "STOCK";
+    public static final String NET_WORTH_BOND = "BOND";
+    public static final String NET_WORTH_CRYPTO = "CRYPTO";
+    public static final List<String> NET_WORTH_CATEGORIES = List.of(
+            NET_WORTH_LIQUIDITY,
+            NET_WORTH_ETF,
+            NET_WORTH_STOCK,
+            NET_WORTH_BOND,
+            NET_WORTH_CRYPTO
+    );
 }

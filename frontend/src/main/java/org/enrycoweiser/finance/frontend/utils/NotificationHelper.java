@@ -9,18 +9,20 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 public class NotificationHelper {
+    private static final int DURATION = 3000;
+
     public static void showErrorMessage(String message) {
         Notification notification = new Notification();
-        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-        notification.setDuration(0);
+        notification.addThemeVariants(NotificationVariant.ERROR);
+        notification.setDuration(DURATION);
 
         showMessage(notification, message);
     }
 
     public static void showConfirmMessage(String message) {
         Notification notification = new Notification();
-        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-        notification.setDuration(5000);
+        notification.addThemeVariants(NotificationVariant.SUCCESS);
+        notification.setDuration(DURATION);
 
         showMessage(notification, message);
 

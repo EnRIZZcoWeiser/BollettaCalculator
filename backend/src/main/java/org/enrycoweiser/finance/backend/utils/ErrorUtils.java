@@ -9,6 +9,10 @@ public class ErrorUtils {
     public static final String API_003 = "Delete failed! Record not found!";
     public static final String API_004_CODE = "API_004";
     public static final String API_004 = "Save failed! Payment method required!";
+    public static final String API_005_CODE = "API_005";
+    public static final String API_005 = "Save failed! Asset required!";
+    public static final String API_006_CODE = "API_006";
+    public static final String API_006 = "Save failed! Net worth not found!";
 
     public static final String ERR_001_CODE = "ERR_001";
 

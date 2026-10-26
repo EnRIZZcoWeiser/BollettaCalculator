@@ -4,12 +4,15 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.html.AnchorTarget;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.enrycoweiser.finance.frontend.utils.NotificationHelper;
 import org.enrycoweiser.finance.shared.standard.StandardDto;
+import org.enrycoweiser.finance.shared.utils.NameUtils;
 
 import java.util.Set;
 
@@ -18,14 +21,17 @@ public abstract class StandardListView<E extends StandardDto> extends VerticalLa
     protected Grid<E> grid;
 
     public StandardListView() {
-        grid = new Grid<>();
-        grid.setSelectionMode(Grid.SelectionMode.MULTI);
+        grid = createGrid();
 
         add(
                 createContent()
         );
 
         setSizeFull();
+    }
+
+    protected Grid<E> createGrid() {
+        return new Grid<>();
     }
 
     protected Component createContent() {
@@ -223,14 +229,31 @@ public abstract class StandardListView<E extends StandardDto> extends VerticalLa
         footer.setAlignItems(Alignment.CENTER);
         footer.setJustifyContentMode(JustifyContentMode.CENTER);
 
+        footer.getStyle()
+                .set("font-size", "0.8rem")
+                .set("opacity", "0.7");
+
         footer.add(
-                createFooterText()
+                createFooterLink(VaadinIcon.ENVELOPE, NameUtils.AUTHOR_MAIL, "mailto:" + NameUtils.AUTHOR_MAIL),
+                createFooterLink(VaadinIcon.TWITTER, NameUtils.AUTHOR_X, "https://x.com/" + NameUtils.AUTHOR_X),
+                createFooterLink(VaadinIcon.CODE, NameUtils.AUTHOR_GITHUB, "https://github.com/" + NameUtils.AUTHOR_GITHUB)
         );
 
         return footer;
     }
 
-    protected Component createFooterText() {
-        return new H1("Footer");
+    protected Component createFooterLink(VaadinIcon icon, String text, String href) {
+        Icon i = icon.create();
+        i.setSize("0.9rem");
+
+        Anchor link = new Anchor(href, text);
+        link.setTarget(AnchorTarget.BLANK);
+
+        HorizontalLayout layout = new HorizontalLayout(i, link);
+        layout.setSpacing(false);
+        layout.setAlignItems(Alignment.CENTER);
+        layout.getStyle().set("gap", "0.3rem");
+
+        return layout;
     }
 }

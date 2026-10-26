@@ -18,4 +18,7 @@ public class NotificationUtils {
     public static final String LOCATION_REQUIRED = "Location required!";
     public static final String STORE_REQUIRED = "Store required!";
     public static final String NAME_REQUIRED = "Name required!";
+    public static final String ASSET_REQUIRED = "Asset required!";
+    public static final String VALUE_REQUIRED = "Value required!";
+    public static final String ASSET_ROW_REQUIRED = "Select an asset row!";
 }

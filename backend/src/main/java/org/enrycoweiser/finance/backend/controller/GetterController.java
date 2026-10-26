@@ -1,6 +1,7 @@
 package org.enrycoweiser.finance.backend.controller;
 
 import org.enrycoweiser.finance.backend.service.GetterService;
+import org.enrycoweiser.finance.shared.api.response.AssetResponse;
 import org.enrycoweiser.finance.shared.api.response.PaymentMethodResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,5 +20,10 @@ public class GetterController {
     @GetMapping("/paymentMethod")
     public PaymentMethodResponse getAllPaymentMethods() {
         return service.getAllPaymentMethods();
+    }
+
+    @GetMapping("/asset")
+    public AssetResponse getAllAssets() {
+        return service.getAllAssets();
     }
 }

@@ -8,8 +8,10 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.Route;
+import org.enrycoweiser.finance.frontend.ui.list.AssetListView;
 import org.enrycoweiser.finance.frontend.ui.list.ExpenseListView;
 import org.enrycoweiser.finance.frontend.ui.list.IncomeListView;
+import org.enrycoweiser.finance.frontend.ui.list.NetWorthListView;
 import org.enrycoweiser.finance.frontend.ui.list.PaymentMethodListView;
 import org.enrycoweiser.finance.shared.utils.NameUtils;
 
@@ -48,7 +50,9 @@ public class DashboardView extends AppLayout {
         nav.addItem(
                 createExpenseItem(),
                 createIncomeItem(),
-                createPaymentMethodItem()
+                createPaymentMethodItem(),
+                createAssetItem(),
+                createNetWorthItem()
         );
 
         addToDrawer(nav);
@@ -64,5 +68,13 @@ public class DashboardView extends AppLayout {
 
     protected SideNavItem createPaymentMethodItem() {
         return new SideNavItem(NameUtils.PAYMENT_METHOD, PaymentMethodListView.class, VaadinIcon.CREDIT_CARD.create());
+    }
+
+    protected SideNavItem createAssetItem() {
+        return new SideNavItem(NameUtils.ASSET, AssetListView.class, VaadinIcon.WALLET.create());
+    }
+
+    protected SideNavItem createNetWorthItem() {
+        return new SideNavItem(NameUtils.NET_WORTH, NetWorthListView.class, VaadinIcon.CHART.create());
     }
 }

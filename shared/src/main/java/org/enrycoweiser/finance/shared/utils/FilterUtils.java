@@ -28,4 +28,21 @@ public class FilterUtils {
     public static final String PAYMENT_METHOD_NAME = "NAME";
     public static final String PAYMENT_METHOD_ACTIVE = "ACTIVE";
     public static final String PAYMENT_METHOD_ONLY_ACTIVE = "ONLY_ACTIVE";
+
+    /* ASSET */
+    public static final String ASSET_NAME = "NAME";
+    public static final String ASSET_CATEGORY = "CATEGORY";
+    public static final String ASSET_ACTIVE = "ACTIVE";
+    public static final String ASSET_ONLY_ACTIVE = "ONLY_ACTIVE";
+
+    /* NET WORTH */
+    public static final String NET_WORTH_DATE = "DATE";
+    public static final String NET_WORTH_DATE_FROM = "DATE_FROM";
+    public static final String NET_WORTH_DATE_TO = "DATE_TO";
+
+    /* NET WORTH ENTRY */
+    public static final String NET_WORTH_ENTRY_NET_WORTH = "NET_WORTH";
+    public static final String NET_WORTH_ENTRY_ASSET = "ASSET";
+    public static final String NET_WORTH_ENTRY_CATEGORY = "CATEGORY";
+    public static final String NET_WORTH_ENTRY_VALUE = "VALUE";
 }
