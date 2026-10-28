@@ -13,6 +13,14 @@ public class ErrorUtils {
     public static final String API_005 = "Save failed! Asset required!";
     public static final String API_006_CODE = "API_006";
     public static final String API_006 = "Save failed! Net worth not found!";
+    public static final String API_007_CODE = "API_007";
+    public static final String API_007 = "Save failed! Subscription not found!";
+    public static final String API_008_CODE = "API_008";
+    public static final String API_008 = "Year and month required!";
+    public static final String API_009_CODE = "API_009";
+    public static final String API_009 = "Save failed! Investment not found!";
+    public static final String API_010_CODE = "API_010";
+    public static final String API_010 = "Save failed! Not enough shares to sell!";
 
     public static final String ERR_001_CODE = "ERR_001";
 

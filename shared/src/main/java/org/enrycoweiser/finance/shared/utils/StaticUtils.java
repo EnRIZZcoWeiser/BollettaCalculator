@@ -49,4 +49,34 @@ public class StaticUtils {
             NET_WORTH_BOND,
             NET_WORTH_CRYPTO
     );
+
+    public static final String INVESTMENT_ETF = "ETF";
+    public static final String INVESTMENT_STOCK = "STOCK";
+    public static final String INVESTMENT_BOND = "BOND";
+    public static final String INVESTMENT_CRYPTO = "CRYPTO";
+    public static final List<String> INVESTMENT_CATEGORIES = List.of(
+            INVESTMENT_ETF,
+            INVESTMENT_STOCK,
+            INVESTMENT_BOND,
+            INVESTMENT_CRYPTO
+    );
+
+    public static final String INVESTMENT_BUY = "BUY";
+    public static final String INVESTMENT_SELL = "SELL";
+    public static final List<String> INVESTMENT_TYPES = List.of(
+            INVESTMENT_BUY,
+            INVESTMENT_SELL
+    );
+
+    /* category used in the summaries for the subscriptions */
+    public static final String SUBSCRIPTION_CATEGORY = "SUBSCRIPTION";
+
+    /* values of the dashboard period combo boxes */
+    public static final List<Integer> YEARS = List.of(
+            2026,
+            2027
+    );
+    public static final List<Integer> MONTHS = List.of(
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
+    );
 }

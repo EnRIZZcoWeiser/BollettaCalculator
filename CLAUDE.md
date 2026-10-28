@@ -35,11 +35,12 @@ There are three modules, and the backend and the frontend are **two separate Spr
 - **backend** (`:8080`):
   - CRUD API under `/api/entity/<entity>/{save,delete,filter}`. All three are `POST` and take the entity's `*Request` as the body. `filter` with an empty request returns every row of the current user.
   - Lookup lists under `/api/list/<entity>` (`GET`, `GetterController` / `GetterService`). They return the existing typed `XResponse` with all rows of the user, and feed the frontend combo boxes.
+  - Dashboard summary under `POST /api/dashboard/summary` (`DashboardController` / `DashboardService`), described below.
 - **frontend** (`:8081`): Vaadin Flow UI. It does not call backend Java code directly. It sends HTTP requests with `RestTemplate` to the URLs built in `frontend/utils/APIUtils`, which hardcodes `http://localhost:8080/api`.
 
 ### Generic entity pattern
 
-Each entity (Expense, Income, PaymentMethod, Asset, NetWorth, NetWorthEntry) follows the same set of generic base classes. To add a new entity, copy an existing one across all of these layers:
+Each entity (Expense, Income, Transfer, PaymentMethod, Asset, NetWorth, NetWorthEntry, Subscription, SubscriptionHistory, Investment, InvestmentHistory) follows the same set of generic base classes. To add a new entity, copy an existing one across all of these layers:
 
 **shared**
 - `XDto extends StandardDto`
@@ -60,14 +61,23 @@ Each entity (Expense, Income, PaymentMethod, Asset, NetWorth, NetWorthEntry) fol
 
 **frontend**
 - `controller/XController`: static helpers. They turn a `Map<String,Object>` keyed by `FilterUtils` constants into an `XRequest`, then POST it to the backend. `controller/GetterController` calls the `/api/list` endpoints.
+- `ui/DashboardView` is only the app shell (`AppLayout` with a `SideNav`), used as `layout` by every route. The logo and title in the navbar are a `RouterLink` to the start page "/", which is `ui/HomeView`.
 - `ui/list/XListView extends StandardListView<XDto>`:
-  - It is a `@Route` registered in the `DashboardView` (`AppLayout` with a `SideNav`).
-  - The base class builds the icon toolbar (Add/Edit/Delete/Refresh/Filter) and the grid. Subclasses implement the `*Btn()` hooks and `configureColumns()`. `createGrid()` can be overridden to use a different grid, e.g. a `TreeGrid`.
+  - It is a `@Route` with `layout = DashboardView.class`, linked from the `SideNav`.
+  - The base class builds the icon toolbar (Add/Edit/Delete/Refresh/Filter), the grid (single selection) and a small footer with the author's contacts (`NameUtils.AUTHOR_*`). Subclasses implement the `*Btn()` hooks and `configureColumns()`. `createGrid()` can be overridden to use a different grid, e.g. a `TreeGrid`.
   - Lookup lists, e.g. the payment methods, are loaded once in the list view constructor and passed to the dialogs.
-- `ui/dialog/alter/XAlterDlg extends StandardAlterDlg`: the create/edit form. It implements `checkData()` and `confirm()`. `newItem` tells creation from editing.
+- `ui/detail/XDetailView`: the detail of a header entity (master-detail). It is a `StandardListView` of the child rows with `HasUrlParameter<Long>` (`/x/detail/<id>`) and `Breadcrumbs` back to the list. The list view opens it on row double-click.
+- `ui/dialog/alter/XAlterDlg extends StandardAlterDlg`: the create/edit form. It implements `checkData()` and `confirm()`. `newItem` tells creation from editing. Combo boxes use `PartialMatchMode.FIRST_MATCH`.
 - `ui/dialog/filter/XFilterDlg extends StandardFilterDlg`: collects the filter map.
 - Dialogs report back to list views through a `Runnable onConfirm` callback.
-- The theme is Aura. Use the `ButtonVariant.AURA_*` variants: `LUMO_ERROR` does nothing there, the red variant is `AURA_DANGER`.
+- `utils/NotificationHelper` shows success/error notifications that close after 3 seconds.
+- The theme is Aura. Use the generic `ButtonVariant.PRIMARY` / `ERROR` and `NotificationVariant.SUCCESS` / `ERROR` (Vaadin 25.3). The `LUMO_*` variants are for the Lumo theme.
+
+### Transfers
+
+`Transfer` records money moved between two payment methods, e.g. an ATM withdrawal (bank → cash) or a top-up. It has a date, `fromPaymentMethod`, `toPaymentMethod`, money and a note. It is neither an expense nor an income: it only moves liquidity.
+- The filter has `FROM` and `TO` for one side each, and `PAYMENT_METHOD`, which matches transfers where the payment method is on either side.
+- The alter dialog rejects From == To.
 
 ### Net worth
 
@@ -78,10 +88,62 @@ This replaces a monthly spreadsheet: rows are assets, columns are dates.
 - Totals are never stored. `NetWorthService.calculateTotals` computes three of them:
   - `total`: sum of the entries
   - `investments`: the same sum without the `LIQUIDITY` category
-  - `spending`: sum of the Expenses in the calendar month of the snapshot date
-- UI: `NetWorthListView` lists the snapshots. Double-clicking a row navigates to `ui/detail/NetWorthDetailView` (`/netWorth/detail/<id>`). That view is a `StandardListView` with a `TreeGrid` grouped by category: the group rows are built client-side, have `id == null` and show subtotals. It also has `Breadcrumbs` back to the list.
+  - `spending`: sum of the Expenses in the calendar month of the snapshot date, plus the monthly amount (price / 12) of the subscription periods covering that month
+- UI: `NetWorthListView` lists the snapshots. Double-clicking a row opens `ui/detail/NetWorthDetailView` (`/netWorth/detail/<id>`), which uses a `TreeGrid` grouped by category: the group rows are built client-side, have `id == null` and show subtotals.
 - Everything is in EUR. There are no liabilities yet.
 
+### Subscriptions
+
+Only **annual** subscriptions (Spotify, chess.com…), paid in full up front, are tracked here. Monthly ones are entered as normal Expenses, so the payment-method liquidity matches the real balance on any day of the month. A subscription must never be entered in both places.
+- `Subscription`: the header (name, active). The list shows `price` and `monthlyAmount`. These are computed by `SubscriptionService.calculateCurrent` from the history row active today, or from the most recent row if none is active.
+- `SubscriptionHistory`: one annual period with start date, end date (both required), price and payment method. There is no type field.
+  - `SubscriptionHistory.monthlyAmount()` returns price / 12. `isActiveOn(date)` checks the dates.
+  - The `DATE_FROM` / `DATE_TO` filter selects the rows that overlap a period.
+  - For cash, the full price leaves the payment method on the start date. For spending, it is spread as price / 12 over the months of the period.
+- Deleting a `Subscription` deletes its history first.
+- UI: `SubscriptionListView`, then a double-click opens `ui/detail/SubscriptionDetailView` (`/subscription/detail/<id>`). The alter dialog proposes the end date as start + 1 year − 1 day.
+
+### Investments
+
+This section tracks buys and sells of ETFs, stocks and so on. They are neither expenses nor incomes, and they are completely separate from the net worth, where market values are entered by hand.
+- `Investment`: the header (name, category from `StaticUtils.INVESTMENT_CATEGORIES`, active). The list shows four values computed by `InvestmentService.calculatePosition`:
+  - `shares`: bought − sold;
+  - `averagePrice`: buy amount / bought shares, fees excluded;
+  - `invested`: shares × averagePrice;
+  - `fees`: the sum of all fees.
+- `InvestmentHistory`: one operation with date, type (`BUY` / `SELL`, `StaticUtils.INVESTMENT_TYPES`), amount, fee, shares, payment method and note.
+  - `amount` is the money that goes into or comes out of the investment. The fee is on top: a buy takes `amount + fee` from the payment method, a sell gives back `amount − fee`.
+  - `shares` is mapped with `@Column(precision = 20, scale = 8)`. A plain `BigDecimal` column keeps only 2 decimals, so any new field that needs more must declare its scale.
+  - The price per share (`amount / shares`) is computed in `toDto()`, never stored.
+  - `InvestmentHistoryService.save` refuses a sell with more shares than are held (`API_010`). The row being edited is excluded from the count.
+- UI: `InvestmentListView`, then a double-click opens `ui/detail/InvestmentDetailView` (`/investment/detail/<id>`). A new operation defaults to `BUY` with fee 0.
+- Gains are not computed. Dividends are entered by hand as Income.
+
+### Dashboard (start page)
+
+`ui/HomeView` (route "") shows one month, chosen with two combo boxes. Their values are hardcoded in `StaticUtils.YEARS` / `MONTHS`.
+- `DashboardService.getSummary(year, month)` returns a single `DashboardDto` with:
+  - `moneyIn`: the incomes of the month;
+  - `moneyOut`: the expenses of the month plus `monthlyAmount()` of the subscription periods covering it. The subscriptions are grouped under `StaticUtils.SUBSCRIPTION_CATEGORY`;
+  - the two lists of `CategoryAmountDto` (category, amount, percentage of the total), ordered from the biggest category.
+- `liquidity`: one `LiquidityDto` per payment method, computed by `DashboardService.calculateLiquidity`. It is the balance at **today's date**, not tied to the selected month, made of all the movements since the beginning:
+  - + incomes − expenses
+  - + incoming transfers − outgoing transfers
+  - − subscription periods (full price on the start date)
+  - − buys (amount + fee) + sells (amount − fee)
+
+  Inactive payment methods are shown only while their balance is not zero. There is deliberately no "total" card.
+- Vaadin Charts is a paid product, so it is not used. The categories are drawn as horizontal bars made of plain `Div`s: the biggest category fills the bar and the others are scaled on it. Above them there are three cards: Money In, Money Out and Balance.
+
+### Opening balances
+
+The app is used from 01/01/2027. The starting situation was entered **directly in the DB** on 31/12/2026:
+- one `Transfer` per payment method with an empty `from` (the opening balance);
+- one `BUY` per investment with an empty payment method (the starting position: shares held and total amount spent).
+
+An empty payment method means "outside the app": the movement is skipped on that side by the liquidity calculation, and the `toDto()` / grids handle the null. The alter dialogs still require those fields, so these rows must be edited in the DB, not in the UI. Rows inserted by hand need `user_id = 1`.
+
+Subscriptions paid before 2027 were not entered. This is a known and accepted gap: their monthly quota is missing from the 2027 spending.
+
 ### Work in progress
-- `Subscription` / `SubscriptionHistory` are empty classes with no other layers yet.
-- `StandardListView` still shows a placeholder "Footer" text.
+- Optional subscription category (same values as expenses). When empty, the subscription is shown under a "SUBSCRIPTION" category in the summaries. Proposed but not implemented yet.

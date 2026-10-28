@@ -6,10 +6,12 @@ import org.enrycoweiser.finance.backend.domain.Asset;
 import org.enrycoweiser.finance.backend.domain.Expense;
 import org.enrycoweiser.finance.backend.domain.NetWorth;
 import org.enrycoweiser.finance.backend.domain.NetWorthEntry;
+import org.enrycoweiser.finance.backend.domain.SubscriptionHistory;
 import org.enrycoweiser.finance.backend.repository.AssetRepository;
 import org.enrycoweiser.finance.backend.repository.ExpenseRepository;
 import org.enrycoweiser.finance.backend.repository.NetWorthEntryRepository;
 import org.enrycoweiser.finance.backend.repository.NetWorthRepository;
+import org.enrycoweiser.finance.backend.repository.SubscriptionHistoryRepository;
 import org.enrycoweiser.finance.backend.security.SEManager;
 import org.enrycoweiser.finance.backend.standard.EntityService;
 import org.enrycoweiser.finance.backend.utils.ErrorUtils;
@@ -35,6 +37,7 @@ public class NetWorthService implements EntityService<NetWorthDto,
     private final NetWorthEntryRepository netWorthEntryRepository;
     private final AssetRepository assetRepository;
     private final ExpenseRepository expenseRepository;
+    private final SubscriptionHistoryRepository subscriptionHistoryRepository;
 
     @Transactional
     @Override
@@ -166,6 +169,7 @@ public class NetWorthService implements EntityService<NetWorthDto,
         total       = sum of all the rows
         investments = sum of all the rows except liquidity
         spending    = sum of the expenses in the month of the net worth date
+                      + monthly amount (price / 12) of the subscription rows covering that month
      */
     protected void calculateTotals(NetWorthDto dto) {
         BigDecimal total = BigDecimal.ZERO;
@@ -196,6 +200,14 @@ public class NetWorthService implements EntityService<NetWorthDto,
                 if(e.getMoney() != null) {
                     spending = spending.add(e.getMoney());
                 }
+            }
+
+            Map<String, Object> subscriptionFilters = new HashMap<>();
+            subscriptionFilters.put(FilterUtils.SUBSCRIPTION_HISTORY_DATE_FROM, date.withDayOfMonth(1));
+            subscriptionFilters.put(FilterUtils.SUBSCRIPTION_HISTORY_DATE_TO, date.withDayOfMonth(date.lengthOfMonth()));
+
+            for (SubscriptionHistory h : subscriptionHistoryRepository.retrieveByFilters(subscriptionFilters)) {
+                spending = spending.add(h.monthlyAmount());
             }
         }
 
