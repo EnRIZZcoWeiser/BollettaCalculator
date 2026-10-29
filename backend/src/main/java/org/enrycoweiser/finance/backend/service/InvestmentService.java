@@ -2,8 +2,10 @@ package org.enrycoweiser.finance.backend.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.enrycoweiser.finance.backend.domain.Asset;
 import org.enrycoweiser.finance.backend.domain.Investment;
 import org.enrycoweiser.finance.backend.domain.InvestmentHistory;
+import org.enrycoweiser.finance.backend.repository.AssetRepository;
 import org.enrycoweiser.finance.backend.repository.InvestmentHistoryRepository;
 import org.enrycoweiser.finance.backend.repository.InvestmentRepository;
 import org.enrycoweiser.finance.backend.security.SEManager;
@@ -12,8 +14,10 @@ import org.enrycoweiser.finance.backend.utils.ErrorUtils;
 import org.enrycoweiser.finance.backend.utils.filter.InvestmentFilter;
 import org.enrycoweiser.finance.shared.api.request.InvestmentRequest;
 import org.enrycoweiser.finance.shared.api.response.InvestmentResponse;
+import org.enrycoweiser.finance.shared.dto.AssetDto;
 import org.enrycoweiser.finance.shared.dto.InvestmentDto;
 import org.enrycoweiser.finance.shared.utils.FilterUtils;
+import org.enrycoweiser.finance.shared.utils.StaticUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -28,6 +32,7 @@ public class InvestmentService implements EntityService<InvestmentDto,
 
     private final InvestmentRepository investmentRepository;
     private final InvestmentHistoryRepository investmentHistoryRepository;
+    private final AssetRepository assetRepository;
 
     @Transactional
     @Override
@@ -50,8 +55,23 @@ public class InvestmentService implements EntityService<InvestmentDto,
             s.setUserId(SEManager.getId());
         }
 
-        s.setName(request.getName());
-        s.setCategory(request.getCategory());
+        if(request.getAsset() == null) {
+            investmentResponse.createErrorResponse(ErrorUtils.API_005, ErrorUtils.API_005_CODE);
+            return investmentResponse;
+        }
+
+        Optional<Asset> asset = assetRepository.retrieveById(request.getAsset().getId());
+        if(asset.isPresent() && StaticUtils.NET_WORTH_LIQUIDITY.equals(asset.get().getCategory())) {
+            investmentResponse.createErrorResponse(ErrorUtils.API_011, ErrorUtils.API_011_CODE);
+            return investmentResponse;
+        }
+
+        if(isAssetUsed(request.getAsset(), s.getId())) {
+            investmentResponse.createErrorResponse(ErrorUtils.API_012, ErrorUtils.API_012_CODE);
+            return investmentResponse;
+        }
+
+        s.setAsset(new Asset(request.getAsset()));
         s.setActive(request.getActive());
 
         try {
@@ -122,6 +142,22 @@ public class InvestmentService implements EntityService<InvestmentDto,
         investmentResponse.createResponse();
 
         return investmentResponse;
+    }
+
+    /*
+        An asset can belong to one investment only: true if another investment (not this one) already uses it.
+     */
+    protected boolean isAssetUsed(AssetDto asset, Long investmentId) {
+        Map<String, Object> filters = new HashMap<>();
+        filters.put(FilterUtils.INVESTMENT_ASSET, asset);
+
+        for (Investment i : investmentRepository.retrieveByFilters(filters)) {
+            if(!Objects.equals(i.getId(), investmentId)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected List<InvestmentHistory> retrieveHistories(Long investmentId) {

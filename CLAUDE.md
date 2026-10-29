@@ -110,12 +110,15 @@ Only subscriptions **paid in full up front** for several months (Spotify for a y
 
 ### Investments
 
-This section tracks buys and sells of ETFs, stocks and so on. They are neither expenses nor incomes, and they are completely separate from the net worth, where market values are entered by hand.
-- `Investment`: the header (name, category from `StaticUtils.INVESTMENT_CATEGORIES`, active). The list shows four values computed by `InvestmentService.calculatePosition`:
-  - `shares`: bought − sold;
-  - `averagePrice`: buy amount / bought shares, fees excluded;
-  - `invested`: shares × averagePrice;
-  - `fees`: the sum of all fees.
+This section tracks buys and sells of ETFs, stocks and so on. They are neither expenses nor incomes. The only link to the net worth is the shared `Asset` master data: the values are separate, since net worth market values are entered by hand.
+- `Investment`: the header. It has an `asset` (`@ManyToOne`, column `id_asset`) and `active`.
+  - Name and category are taken from the asset in `toDto()` and are not stored on the investment. The filter and the ordering go through a `left join i.asset`.
+  - An asset can be linked to **one investment only**, and **never a `LIQUIDITY` one**. The frontend enforces this: `InvestmentListView.loadAvailableAssets` fills the dialog combo with the remaining assets on every open, keeping the current one when editing. The backend enforces it too: `InvestmentService.save` returns `API_011` / `API_012`.
+  - The list shows four values computed by `InvestmentService.calculatePosition`:
+    - `shares`: bought − sold;
+    - `averagePrice`: buy amount / bought shares, fees excluded;
+    - `invested`: shares × averagePrice;
+    - `fees`: the sum of all fees.
 - `InvestmentHistory`: one operation with date, type (`BUY` / `SELL`, `StaticUtils.INVESTMENT_TYPES`), amount, fee, shares, payment method and note.
   - `amount` is the money that goes into or comes out of the investment. The fee is on top: a buy takes `amount + fee` from the payment method, a sell gives back `amount − fee`.
   - `shares` is mapped with `@Column(precision = 20, scale = 8)`. A plain `BigDecimal` column keeps only 2 decimals, so any new field that needs more must declare its scale.

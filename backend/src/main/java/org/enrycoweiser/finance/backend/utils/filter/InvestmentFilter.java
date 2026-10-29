@@ -14,6 +14,10 @@ public class InvestmentFilter {
             return filterMap;
         }
 
+        if(request.getAsset() != null) {
+            filterMap.put(FilterUtils.INVESTMENT_ASSET, request.getAsset());
+        }
+
         if(request.getName() != null) {
             filterMap.put(FilterUtils.INVESTMENT_NAME, request.getName());
         }

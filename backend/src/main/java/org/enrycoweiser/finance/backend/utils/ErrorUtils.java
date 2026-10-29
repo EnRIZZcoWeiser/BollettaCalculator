@@ -21,6 +21,10 @@ public class ErrorUtils {
     public static final String API_009 = "Save failed! Investment not found!";
     public static final String API_010_CODE = "API_010";
     public static final String API_010 = "Save failed! Not enough shares to sell!";
+    public static final String API_011_CODE = "API_011";
+    public static final String API_011 = "Save failed! A liquidity asset can not be an investment!";
+    public static final String API_012_CODE = "API_012";
+    public static final String API_012 = "Save failed! Asset already used by another investment!";
 
     public static final String ERR_001_CODE = "ERR_001";
 

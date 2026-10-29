@@ -2,35 +2,42 @@ package org.enrycoweiser.finance.frontend.ui.dialog.alter;
 
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.combobox.PartialMatchMode;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import lombok.Getter;
 import lombok.Setter;
 import org.enrycoweiser.finance.frontend.base.StandardAlterDlg;
 import org.enrycoweiser.finance.frontend.controller.InvestmentController;
 import org.enrycoweiser.finance.frontend.utils.NotificationHelper;
 import org.enrycoweiser.finance.shared.api.response.InvestmentResponse;
+import org.enrycoweiser.finance.shared.dto.AssetDto;
 import org.enrycoweiser.finance.shared.utils.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Getter
 @Setter
 public class InvestmentAlterDlg extends StandardAlterDlg {
-    protected TextField nameTxt;
-    protected ComboBox<String> categoryCmb;
+    protected ComboBox<AssetDto> assetCmb;
     protected Checkbox activeChk;
 
     protected boolean newItem;
     protected Long idDto;
+    protected List<AssetDto> assets;
 
     protected Runnable onConfirm;
 
-    public InvestmentAlterDlg(String title, Map<String, Object> values, boolean newItem) {
+    /*
+        assets: the assets that can still be chosen (not LIQUIDITY, not used by another investment).
+     */
+    public InvestmentAlterDlg(String title, Map<String, Object> values, boolean newItem, List<AssetDto> assets) {
         super(title);
 
         this.newItem = newItem;
+        this.assets = assets;
 
         valueComboBoxes();
         setFields(values);
@@ -38,13 +45,14 @@ public class InvestmentAlterDlg extends StandardAlterDlg {
     }
 
     protected void valueComboBoxes() {
-        valueCategoryCombo();
+        valueAssetCombo();
     }
 
-    protected void valueCategoryCombo() {
-        categoryCmb.setItems(
-                StaticUtils.INVESTMENT_CATEGORIES
+    protected void valueAssetCombo() {
+        assetCmb.setItems(
+                assets
         );
+        assetCmb.setPartialMatchMode(PartialMatchMode.FIRST_MATCH);
     }
 
     protected void setFields(Map<String, Object> values) {
@@ -52,21 +60,23 @@ public class InvestmentAlterDlg extends StandardAlterDlg {
             return;
         }
 
-        if(values.get(FilterUtils.INVESTMENT_NAME) instanceof String s) {
-            nameTxt.setValue(s);
-        }
-
-        if(values.get(FilterUtils.INVESTMENT_CATEGORY) instanceof String s) {
-            try {
-                categoryCmb.setValue(s);
-            } catch (IllegalArgumentException iae) {
-                categoryCmb.setValue(null);
-            }
+        if(values.get(FilterUtils.INVESTMENT_ASSET) instanceof AssetDto a) {
+            assetCmb.setValue(findAsset(a.getId()));
         }
 
         if(values.get(FilterUtils.INVESTMENT_ACTIVE) instanceof Boolean b) {
             activeChk.setValue(b);
         }
+    }
+
+    protected AssetDto findAsset(Long id) {
+        for (AssetDto a : assets) {
+            if(Objects.equals(a.getId(), id)) {
+                return a;
+            }
+        }
+
+        return null;
     }
 
     protected void setId(Map<String, Object> values) {
@@ -83,13 +93,11 @@ public class InvestmentAlterDlg extends StandardAlterDlg {
     protected FormLayout createLayout() {
         FormLayout layout = new FormLayout();
 
-        nameTxt = new TextField(NameUtils.NAME);
-        categoryCmb = new ComboBox<>(NameUtils.CATEGORY);
+        assetCmb = new ComboBox<>(NameUtils.ASSET);
         activeChk = new Checkbox(NameUtils.ACTIVE);
 
         layout.add(
-                nameTxt,
-                categoryCmb,
+                assetCmb,
                 activeChk
         );
 
@@ -119,12 +127,8 @@ public class InvestmentAlterDlg extends StandardAlterDlg {
 
     @Override
     protected String checkData() {
-        if(nameTxt.getValue() == null || nameTxt.getValue().isBlank()) {
-            return NotificationUtils.NAME_REQUIRED;
-        }
-
-        if(categoryCmb.getValue() == null) {
-            return NotificationUtils.CATEGORY_REQUIRED;
+        if(assetCmb.getValue() == null) {
+            return NotificationUtils.ASSET_REQUIRED;
         }
 
         return null;
@@ -134,8 +138,7 @@ public class InvestmentAlterDlg extends StandardAlterDlg {
         Map<String, Object> data = new HashMap<>();
 
         data.put(FilterUtils.ID, idDto);
-        data.put(FilterUtils.INVESTMENT_NAME, nameTxt.getValue());
-        data.put(FilterUtils.INVESTMENT_CATEGORY, categoryCmb.getValue());
+        data.put(FilterUtils.INVESTMENT_ASSET, assetCmb.getValue());
         data.put(FilterUtils.INVESTMENT_ACTIVE, activeChk.getValue());
 
         return data;

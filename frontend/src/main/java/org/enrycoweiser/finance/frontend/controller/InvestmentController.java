@@ -4,6 +4,7 @@ import org.enrycoweiser.finance.frontend.utils.APIUtils;
 import org.enrycoweiser.finance.frontend.utils.ErrorUtils;
 import org.enrycoweiser.finance.shared.api.request.InvestmentRequest;
 import org.enrycoweiser.finance.shared.api.response.InvestmentResponse;
+import org.enrycoweiser.finance.shared.dto.AssetDto;
 import org.enrycoweiser.finance.shared.utils.FilterUtils;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
@@ -35,6 +36,10 @@ public class InvestmentController {
 
         if(data.get(FilterUtils.ID) instanceof Long l) {
             req.setId(l);
+        }
+
+        if(data.get(FilterUtils.INVESTMENT_ASSET) instanceof AssetDto a) {
+            req.setAsset(a);
         }
 
         if(data.get(FilterUtils.INVESTMENT_NAME) instanceof String s) {

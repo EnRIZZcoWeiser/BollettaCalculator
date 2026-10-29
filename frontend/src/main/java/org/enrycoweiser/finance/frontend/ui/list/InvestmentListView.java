@@ -4,18 +4,18 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.enrycoweiser.finance.frontend.base.DeleteConfirmDlg;
 import org.enrycoweiser.finance.frontend.base.StandardListView;
+import org.enrycoweiser.finance.frontend.controller.GetterController;
 import org.enrycoweiser.finance.frontend.controller.InvestmentController;
 import org.enrycoweiser.finance.frontend.ui.DashboardView;
 import org.enrycoweiser.finance.frontend.ui.detail.InvestmentDetailView;
 import org.enrycoweiser.finance.frontend.ui.dialog.alter.InvestmentAlterDlg;
 import org.enrycoweiser.finance.frontend.ui.dialog.filter.InvestmentFilterDlg;
 import org.enrycoweiser.finance.frontend.utils.NotificationHelper;
+import org.enrycoweiser.finance.shared.api.response.AssetResponse;
 import org.enrycoweiser.finance.shared.api.response.InvestmentResponse;
+import org.enrycoweiser.finance.shared.dto.AssetDto;
 import org.enrycoweiser.finance.shared.dto.InvestmentDto;
-import org.enrycoweiser.finance.shared.utils.FilterUtils;
-import org.enrycoweiser.finance.shared.utils.NameUtils;
-import org.enrycoweiser.finance.shared.utils.NotificationUtils;
-import org.enrycoweiser.finance.shared.utils.StringUtils;
+import org.enrycoweiser.finance.shared.utils.*;
 
 import java.util.*;
 
@@ -41,10 +41,61 @@ public class InvestmentListView extends StandardListView<InvestmentDto> {
 
     @Override
     protected void addBtn() {
-        InvestmentAlterDlg alterDlg = new InvestmentAlterDlg(NameUtils.INVESTMENT, null, true);
+        InvestmentAlterDlg alterDlg = new InvestmentAlterDlg(NameUtils.INVESTMENT, null, true, loadAvailableAssets(null));
         alterDlg.setOnConfirm(this::refreshBtn);
 
         alterDlg.open();
+    }
+
+    /*
+        Assets that can be linked to an investment: not LIQUIDITY and not already used by another investment.
+        The asset of the investment being edited (currentAsset) stays available.
+        Loaded every time a dialog opens, so a new asset or investment is always taken into account.
+     */
+    protected List<AssetDto> loadAvailableAssets(AssetDto currentAsset) {
+        AssetResponse assetResponse = GetterController.callGetAllAssetsAPI();
+        if(assetResponse == null) {
+            NotificationHelper.showErrorMessage(NameUtils.ASSET + NotificationUtils.RETRIEVE_FAILED);
+            return new ArrayList<>();
+        } else if(assetResponse.getStatus() != null && assetResponse.getStatus().equals(StringUtils.RESPONSE_KO)) {
+            NotificationHelper.showErrorMessage(assetResponse.getErrorCode() + " - " + assetResponse.getError());
+            return new ArrayList<>();
+        }
+
+        // all the investments, not only the filtered ones in the grid
+        InvestmentResponse investmentResponse = InvestmentController.callRefreshAPI(new HashMap<>());
+        if(investmentResponse == null) {
+            NotificationHelper.showErrorMessage(NameUtils.INVESTMENT + NotificationUtils.RETRIEVE_FAILED);
+            return new ArrayList<>();
+        } else if(investmentResponse.getStatus() != null && investmentResponse.getStatus().equals(StringUtils.RESPONSE_KO)) {
+            NotificationHelper.showErrorMessage(investmentResponse.getErrorCode() + " - " + investmentResponse.getError());
+            return new ArrayList<>();
+        }
+
+        Set<Long> usedAssets = new HashSet<>();
+        if(investmentResponse.getItems() != null) {
+            for (InvestmentDto i : investmentResponse.getItems()) {
+                if(i.getAssetDto() != null) {
+                    usedAssets.add(i.getAssetDto().getId());
+                }
+            }
+        }
+        if(currentAsset != null) {
+            usedAssets.remove(currentAsset.getId());
+        }
+
+        List<AssetDto> available = new ArrayList<>();
+        if(assetResponse.getItems() != null) {
+            for (AssetDto a : assetResponse.getItems()) {
+                if(StaticUtils.NET_WORTH_LIQUIDITY.equals(a.getCategory()) || usedAssets.contains(a.getId())) {
+                    continue;
+                }
+
+                available.add(a);
+            }
+        }
+
+        return available;
     }
 
     @Override
@@ -98,7 +149,8 @@ public class InvestmentListView extends StandardListView<InvestmentDto> {
             return;
         }
 
-        InvestmentAlterDlg alterDlg = new InvestmentAlterDlg(NameUtils.INVESTMENT, data, false);
+        InvestmentDto i = grid.getSelectedItems().iterator().next();
+        InvestmentAlterDlg alterDlg = new InvestmentAlterDlg(NameUtils.INVESTMENT, data, false, loadAvailableAssets(i.getAssetDto()));
         alterDlg.setOnConfirm(this::refreshBtn);
 
         alterDlg.open();
@@ -130,8 +182,7 @@ public class InvestmentListView extends StandardListView<InvestmentDto> {
 
         InvestmentDto i = grid.getSelectedItems().iterator().next();
         data.put(FilterUtils.ID, i.getId());
-        data.put(FilterUtils.INVESTMENT_NAME, i.getName());
-        data.put(FilterUtils.INVESTMENT_CATEGORY, i.getCategory());
+        data.put(FilterUtils.INVESTMENT_ASSET, i.getAssetDto());
         data.put(FilterUtils.INVESTMENT_ACTIVE, i.getActive());
 
         return data;

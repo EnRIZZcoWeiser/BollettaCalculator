@@ -71,6 +71,7 @@ public class FilterUtils {
     public static final String SUBSCRIPTION_HISTORY_DATE_TO = "DATE_TO";
 
     /* INVESTMENT */
+    public static final String INVESTMENT_ASSET = "ASSET";
     public static final String INVESTMENT_NAME = "NAME";
     public static final String INVESTMENT_CATEGORY = "CATEGORY";
     public static final String INVESTMENT_ACTIVE = "ACTIVE";
