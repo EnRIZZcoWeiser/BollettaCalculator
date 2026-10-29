@@ -33,8 +33,11 @@ public class NameUtils {
     public static final String VALUE = "Value";
     public static final String INVESTMENTS = "Investments";
     public static final String SPENDING = "Spending";
-    public static final String START_DATE = "Start Date";
-    public static final String END_DATE = "End Date";
+    public static final String START_YEAR = "Start Year";
+    public static final String START_MONTH = "Start Month";
+    public static final String END_YEAR = "End Year";
+    public static final String END_MONTH = "End Month";
+    public static final String MONTHS = "Months";
     public static final String PRICE = "Price";
     public static final String MONTHLY_AMOUNT = "Monthly Amount";
     public static final String YEAR = "Year";

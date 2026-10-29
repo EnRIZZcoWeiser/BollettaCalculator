@@ -21,10 +21,10 @@ public class NotificationUtils {
     public static final String ASSET_REQUIRED = "Asset required!";
     public static final String VALUE_REQUIRED = "Value required!";
     public static final String ASSET_ROW_REQUIRED = "Select an asset row!";
-    public static final String END_DATE_REQUIRED = "End date required!";
-    public static final String START_DATE_REQUIRED = "Start date required!";
+    public static final String START_MONTH_REQUIRED = "Start month and year required!";
+    public static final String END_MONTH_REQUIRED = "End month and year required!";
+    public static final String END_MONTH_BEFORE_START = "End month before start month!";
     public static final String PRICE_REQUIRED = "Price required!";
-    public static final String END_DATE_BEFORE_START = "End date before start date!";
     public static final String FROM_REQUIRED = "From payment method required!";
     public static final String TO_REQUIRED = "To payment method required!";
     public static final String SAME_PAYMENT_METHOD = "From and To must be different!";

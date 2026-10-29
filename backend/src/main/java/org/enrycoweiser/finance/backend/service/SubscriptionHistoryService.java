@@ -58,8 +58,8 @@ public class SubscriptionHistoryService implements EntityService<SubscriptionHis
             h.setUserId(SEManager.getId());
         }
 
-        h.setStartDate(request.getStartDate());
-        h.setEndDate(request.getEndDate());
+        h.setStartDate(SubscriptionHistory.firstDayOfMonth(request.getStartDate()));
+        h.setEndDate(SubscriptionHistory.lastDayOfMonth(request.getEndDate()));
         h.setPrice(request.getPrice());
         if(request.getPaymentMethod() == null) {
             historyResponse.createErrorResponse(ErrorUtils.API_004, ErrorUtils.API_004_CODE);

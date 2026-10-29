@@ -12,6 +12,8 @@ import org.enrycoweiser.finance.shared.dto.SubscriptionHistoryDto;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 
 @Getter
 @Setter
@@ -44,6 +46,7 @@ public class SubscriptionHistory extends StandardEntity {
         dto.setEndDate(endDate);
         dto.setPrice(price);
         dto.setMonthlyAmount(monthlyAmount());
+        dto.setMonths(months());
         if(paymentMethod != null) {
             dto.setPaymentMethodDto(paymentMethod.toDto());
         } else {
@@ -54,15 +57,40 @@ public class SubscriptionHistory extends StandardEntity {
     }
 
     /*
-        Every row is an annual period paid in advance:
-        on a single month it weighs price / 12.
+        Months covered by the period, start and end month included:
+        10/2026 - 09/2027 = 12, 10/2026 - 03/2028 = 18.
+     */
+    public int months() {
+        if(startDate == null || endDate == null || endDate.isBefore(startDate)) {
+            return 0;
+        }
+
+        return (int) ChronoUnit.MONTHS.between(YearMonth.from(startDate), YearMonth.from(endDate)) + 1;
+    }
+
+    /*
+        The price is paid in advance and spread over the months of the period:
+        on a single month it weighs price / months.
      */
     public BigDecimal monthlyAmount() {
-        if(price == null) {
+        int months = months();
+        if(price == null || months == 0) {
             return BigDecimal.ZERO;
         }
 
-        return price.divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
+        return price.divide(BigDecimal.valueOf(months), 2, RoundingMode.HALF_UP);
+    }
+
+    /*
+        Only the month counts: the start is stored as the first day of its month,
+        the end as the last day of its month.
+     */
+    public static LocalDate firstDayOfMonth(LocalDate date) {
+        return date != null ? YearMonth.from(date).atDay(1) : null;
+    }
+
+    public static LocalDate lastDayOfMonth(LocalDate date) {
+        return date != null ? YearMonth.from(date).atEndOfMonth() : null;
     }
 
     /*

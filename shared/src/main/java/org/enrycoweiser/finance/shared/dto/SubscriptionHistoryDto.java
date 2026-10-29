@@ -15,6 +15,7 @@ public class SubscriptionHistoryDto extends StandardDto {
     protected LocalDate endDate;
     protected BigDecimal price;
     protected BigDecimal monthlyAmount;
+    protected Integer months;
     protected PaymentMethodDto paymentMethodDto;
     protected Long userId;
 }

@@ -24,6 +24,7 @@ import org.enrycoweiser.finance.shared.dto.SubscriptionDto;
 import org.enrycoweiser.finance.shared.dto.SubscriptionHistoryDto;
 import org.enrycoweiser.finance.shared.utils.*;
 
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /*
@@ -200,8 +201,13 @@ public class SubscriptionDetailView extends StandardListView<SubscriptionHistory
 
     @Override
     protected void configureColumns() {
-        grid.addColumn(SubscriptionHistoryDto::getStartDate).setHeader(NameUtils.START_DATE);
-        grid.addColumn(SubscriptionHistoryDto::getEndDate).setHeader(NameUtils.END_DATE);
+        grid.addColumn(h -> h.getStartDate() != null
+                ? h.getStartDate().format(DateTimeFormatter.ofPattern("MM/yyyy"))
+                : "").setHeader(NameUtils.START_MONTH);
+        grid.addColumn(h -> h.getEndDate() != null
+                ? h.getEndDate().format(DateTimeFormatter.ofPattern("MM/yyyy"))
+                : "").setHeader(NameUtils.END_MONTH);
+        grid.addColumn(SubscriptionHistoryDto::getMonths).setHeader(NameUtils.MONTHS);
         grid.addColumn(SubscriptionHistoryDto::getPrice).setHeader(NameUtils.PRICE);
         grid.addColumn(SubscriptionHistoryDto::getMonthlyAmount).setHeader(NameUtils.MONTHLY_AMOUNT);
         grid.addColumn(h -> h.getPaymentMethodDto() != null

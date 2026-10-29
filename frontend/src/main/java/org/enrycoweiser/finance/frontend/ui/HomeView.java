@@ -275,9 +275,16 @@ public class HomeView extends VerticalLayout {
                 .set("font-size", "1.1rem")
                 .set("color", LIQUIDITY_COLOR);
 
-        HorizontalLayout cards = new HorizontalLayout();
+        /*
+            Grid with 3 slots per row: with 2 payment methods they take 2 slots (2/3 of the width).
+            Every slot is at least 12rem wide, so on narrow screens there are fewer columns.
+         */
+        Div cards = new Div();
         cards.setWidthFull();
-        cards.getStyle().set("flex-wrap", "wrap");
+        cards.getStyle()
+                .set("display", "grid")
+                .set("grid-template-columns", "repeat(auto-fill, minmax(max(12rem, calc((100% - 2rem) / 3)), 1fr))")
+                .set("gap", "1rem");
 
         if(dto.getLiquidity() != null) {
             for (LiquidityDto l : dto.getLiquidity()) {
@@ -313,7 +320,6 @@ public class HomeView extends VerticalLayout {
                 .set("display", "flex")
                 .set("flex-direction", "column")
                 .set("gap", "0.25rem")
-                .set("flex", "1 1 11rem")
                 .set("padding", "0.8rem 1rem")
                 .set("border-radius", "0.75rem")
                 .set("border-left", "0.4rem solid " + LIQUIDITY_COLOR)

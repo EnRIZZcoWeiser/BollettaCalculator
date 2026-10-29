@@ -88,20 +88,25 @@ This replaces a monthly spreadsheet: rows are assets, columns are dates.
 - Totals are never stored. `NetWorthService.calculateTotals` computes three of them:
   - `total`: sum of the entries
   - `investments`: the same sum without the `LIQUIDITY` category
-  - `spending`: sum of the Expenses in the calendar month of the snapshot date, plus the monthly amount (price / 12) of the subscription periods covering that month
+  - `spending`: sum of the Expenses in the calendar month of the snapshot date, plus the monthly amount (price / months) of the subscription periods covering that month
 - UI: `NetWorthListView` lists the snapshots. Double-clicking a row opens `ui/detail/NetWorthDetailView` (`/netWorth/detail/<id>`), which uses a `TreeGrid` grouped by category: the group rows are built client-side, have `id == null` and show subtotals.
 - Everything is in EUR. There are no liabilities yet.
 
 ### Subscriptions
 
-Only **annual** subscriptions (Spotify, chess.com…), paid in full up front, are tracked here. Monthly ones are entered as normal Expenses, so the payment-method liquidity matches the real balance on any day of the month. A subscription must never be entered in both places.
+Only subscriptions **paid in full up front** for several months (Spotify for a year, a 2-year plan…) are tracked here. Monthly ones are entered as normal Expenses, so the payment-method liquidity matches the real balance on any day of the month. A subscription must never be entered in both places.
 - `Subscription`: the header (name, active). The list shows `price` and `monthlyAmount`. These are computed by `SubscriptionService.calculateCurrent` from the history row active today, or from the most recent row if none is active.
-- `SubscriptionHistory`: one annual period with start date, end date (both required), price and payment method. There is no type field.
-  - `SubscriptionHistory.monthlyAmount()` returns price / 12. `isActiveOn(date)` checks the dates.
+- `SubscriptionHistory`: one prepaid period with start month, end month, price and payment method. There is no type field, and the period can be any length (12, 18, 24 months…).
+  - **Only the month counts.** `SubscriptionHistoryService.save` stores the start as the first day of its month and the end as the last day of its month (`SubscriptionHistory.firstDayOfMonth` / `lastDayOfMonth`).
+  - `months()`: the months covered, start and end included (10/2026 − 09/2027 = 12).
+  - `monthlyAmount()`: price / `months()`, counted in each of those months.
+  - `isActiveOn(date)` checks the dates.
   - The `DATE_FROM` / `DATE_TO` filter selects the rows that overlap a period.
-  - For cash, the full price leaves the payment method on the start date. For spending, it is spread as price / 12 over the months of the period.
+  - For cash, the full price leaves the payment method on the stored start date (the 1st of the month). The row is entered on the day it is paid, so the liquidity "to date" is still right.
 - Deleting a `Subscription` deletes its history first.
-- UI: `SubscriptionListView`, then a double-click opens `ui/detail/SubscriptionDetailView` (`/subscription/detail/<id>`). The alter dialog proposes the end date as start + 1 year − 1 day.
+- UI: `SubscriptionListView`, then a double-click opens `ui/detail/SubscriptionDetailView` (`/subscription/detail/<id>`).
+  - The alter dialog has no day at all: start and end are each chosen with two combo boxes, year (`StaticUtils.YEARS`) and month (`StaticUtils.MONTHS`, shown by name), like the dashboard. All four are required. The end month is the last month covered, included. A new period starts from the current month, and the end is proposed as start + 11 months while it is empty. The helper text under the end month shows the number of months. The dialog sends the first day of the start month and the last day of the end month.
+  - The grid shows the months as MM/yyyy plus a "Months" column.
 
 ### Investments
 
@@ -132,7 +137,7 @@ This section tracks buys and sells of ETFs, stocks and so on. They are neither e
   - − subscription periods (full price on the start date)
   - − buys (amount + fee) + sells (amount − fee)
 
-  Inactive payment methods are shown only while their balance is not zero. There is deliberately no "total" card.
+  Inactive payment methods are shown only while their balance is not zero. There is deliberately no "total" card. The cards are laid out in a CSS grid with 3 slots per row (with 2 payment methods they take 2/3 of the width).
 - Vaadin Charts is a paid product, so it is not used. The categories are drawn as horizontal bars made of plain `Div`s: the biggest category fills the bar and the others are scaled on it. Above them there are three cards: Money In, Money Out and Balance.
 
 ### Opening balances
